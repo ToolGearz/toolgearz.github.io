@@ -1,0 +1,310 @@
+---
+export const prerender = true;
+
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+const pageUrl = 'https://juttaiblog.online/tools/css-gradient-generator';
+const faqs = [
+  {
+    question: 'What is the difference between linear and radial gradients?',
+    answer: 'A linear gradient blends colors along a straight line at the selected angle. A radial gradient blends outward from its center in an ellipse that fills the preview area.',
+  },
+  {
+    question: 'Can I use more than two color stops?',
+    answer: 'Yes. Choose any stop count from two through five, then edit each stop color and its percentage position.',
+  },
+  {
+    question: 'Does the generator need an external service?',
+    answer: 'No. The preview and CSS string are created locally in your browser without a network API or uploaded color data.',
+  },
+  {
+    question: 'Why can two color stops have the same position?',
+    answer: 'Equal positions create a sharp transition between colors. Keeping positions in increasing order gives the most predictable CSS result.',
+  },
+];
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'CSS Gradient Generator',
+  url: pageUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="CSS Gradient Generator | Linear & Radial Gradients | Jutt AI Tools"
+  description="Create CSS linear and radial gradients with two to five editable color stops, live preview, presets, randomize, and copyable CSS."
+  url="/tools/css-gradient-generator"
+  analytics={false}
+>
+  <Navbar />
+  <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
+    <header class="py-12 sm:py-16">
+      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">CSS Gradient Generator</h1>
+      <p class="mt-3 max-w-2xl leading-7 text-slate-600">Build a linear or radial gradient with live color-stop controls, preview it, and copy the CSS directly into your project.</p>
+    </header>
+
+    <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="CSS gradient generator">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label for="gradient-type" class="block text-sm font-bold text-slate-900">
+          Gradient type
+          <select id="gradient-type" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+            <option value="linear">Linear</option>
+            <option value="radial">Radial</option>
+          </select>
+        </label>
+        <label for="gradient-count" class="block text-sm font-bold text-slate-900">
+          Number of color stops
+          <select id="gradient-count" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+            <option value="2">2 stops</option>
+            <option value="3" selected>3 stops</option>
+            <option value="4">4 stops</option>
+            <option value="5">5 stops</option>
+          </select>
+        </label>
+      </div>
+      <label id="gradient-angle-control" for="gradient-angle" class="block text-sm font-bold text-slate-900">
+        Linear angle: <output id="gradient-angle-value" for="gradient-angle">135°</output>
+        <input id="gradient-angle" type="range" min="0" max="360" value="135" class="mt-3 block w-full accent-teal-700" />
+      </label>
+      <fieldset class="space-y-3">
+        <legend class="mb-3 text-sm font-extrabold text-slate-900">Color stops and positions</legend>
+        {[
+          { index: 1, color: '#0f766e', position: 0 },
+          { index: 2, color: '#14b8a6', position: 50 },
+          { index: 3, color: '#ccfbf1', position: 100 },
+          { index: 4, color: '#0f172a', position: 75 },
+          { index: 5, color: '#f97316', position: 100 },
+        ].map(({ index, color, position }) => (
+          <div data-gradient-stop={index} class={index > 3 ? 'hidden grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]' : 'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]'}>
+            <label for={`gradient-color-${index}`} class="block text-sm font-bold text-slate-900">
+              Stop {index} color
+              <input id={`gradient-color-${index}`} data-gradient-color type="color" value={color} class="mt-2 block h-12 w-full cursor-pointer rounded-xl border border-slate-300 bg-white p-1" />
+            </label>
+            <label for={`gradient-position-${index}`} class="block text-sm font-bold text-slate-900">
+              Position (%)
+              <input id={`gradient-position-${index}`} data-gradient-position type="number" min="0" max="100" step="1" value={position} inputmode="numeric" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+            </label>
+            <span class="hidden rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600 sm:inline">Stop {index}</span>
+          </div>
+        ))}
+      </fieldset>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" data-gradient-preset="sunset" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Sunset preset</button>
+        <button type="button" data-gradient-preset="ocean" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Ocean preset</button>
+        <button type="button" data-gradient-preset="forest" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Forest preset</button>
+        <button id="randomize-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Randomize</button>
+      </div>
+      <div id="gradient-preview" class="grid min-h-56 place-items-center rounded-2xl border border-slate-200 p-6 sm:min-h-72" role="img" aria-label="Live preview of the generated CSS gradient">
+        <span class="rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-slate-900 shadow-sm">Gradient preview</span>
+      </div>
+      <div>
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <label for="gradient-output" class="text-sm font-bold text-slate-900">CSS output</label>
+          <button id="copy-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy CSS</button>
+        </div>
+        <textarea id="gradient-output" rows="3" readonly spellcheck="false" aria-label="Generated CSS gradient declaration" class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none"></textarea>
+        <p id="gradient-status" class="mt-2 text-sm text-slate-600" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <article class="mt-10 space-y-5 leading-7 text-slate-700">
+      <section>
+        <h2 class="text-2xl font-extrabold text-slate-950">What CSS gradients do</h2>
+        <p>A CSS gradient paints a gradual transition between two or more colors without requiring an image file. Gradients are generated by the browser and can scale smoothly with a component, which makes them useful for backgrounds, buttons, banners, cards, and decorative layers. A gradient is written as an image value in CSS, most often with <code>linear-gradient()</code> or <code>radial-gradient()</code>. Each color stop pairs a color with an optional position that controls where the transition reaches that color.</p>
+        <p>A linear gradient blends along a straight line. Its angle changes the direction of that line; CSS measures zero degrees upward and increases clockwise, so 90 degrees runs to the right and 180 degrees runs down. A radial gradient spreads from a central point toward the edges of an ellipse. This generator creates standard CSS declarations, supports two through five color stops, and updates a preview as you edit controls. The work happens entirely in the browser without a remote image or gradient service.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">How to create and copy a gradient</h2>
+        <p>Select Linear or Radial and choose how many stops you need. Use the color controls to pick colors and the position fields to place their stops between 0 and 100 percent. Linear mode adds an angle control; radial mode uses the browser’s default ellipse centered in the preview. Choose a preset to start from a coordinated palette, or Randomize to generate a fresh set of colors. The preview and CSS output update immediately when a control changes. Select Copy CSS to copy the declaration for use in a stylesheet.</p>
+        <p>Stop positions are validated as whole percentages from 0 to 100 and must appear in nondecreasing order. Equal positions are allowed and create a hard color boundary. If a value is empty, outside the range, or out of order, the page displays an error and keeps the previous valid preview. The copy button reports clipboard access errors so you can select the output manually if needed.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Design tips and common uses</h2>
+        <p>Two stops are often enough for a quiet surface or a simple button. Additional stops can create layered color transitions, but too many competing hues can make text difficult to read. Try using stops from a related palette, and check foreground contrast across the entire gradient—not just at its first color. A translucent overlay or solid fallback color may help when a gradient appears behind important content. Keep decorative gradients from conveying information on their own, and test the result at different screen sizes and in the browsers your project supports.</p>
+        <p>Presets are starting points rather than fixed designs: change the stop count, angle, colors, and positions to match your interface. Copy the generated declaration into a component or stylesheet and adjust it alongside the rest of your design tokens. Gradients can also be layered with backgrounds, but this tool outputs one gradient image at a time. For nearby styling tasks, visit the <a class="font-bold underline" href="/tools/color-converter">Color Converter</a>, <a class="font-bold underline" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>, or <a class="font-bold underline" href="/tools/css-minifier">CSS Minifier</a>.</p>
+      </section>
+      <section aria-labelledby="gradient-faq-heading">
+        <h2 id="gradient-faq-heading" class="text-2xl font-extrabold text-slate-950">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqs.map(({ question, answer }) => (
+            <div>
+              <h3 class="mb-1 text-lg font-bold text-slate-900">{question}</h3>
+              <p class="mb-0">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </article>
+    <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="gradient-related-heading">
+      <h2 id="gradient-related-heading" class="text-xl font-extrabold text-slate-950">Related design tools</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/color-converter">Color Converter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-minifier">CSS Minifier</a>
+      </div>
+    </section>
+    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const gradientType = document.querySelector<HTMLSelectElement>('#gradient-type');
+  const gradientCount = document.querySelector<HTMLSelectElement>('#gradient-count');
+  const gradientAngle = document.querySelector<HTMLInputElement>('#gradient-angle');
+  const gradientAngleControl = document.querySelector<HTMLLabelElement>('#gradient-angle-control');
+  const gradientAngleValue = document.querySelector<HTMLOutputElement>('#gradient-angle-value');
+  const gradientPreview = document.querySelector<HTMLDivElement>('#gradient-preview');
+  const gradientOutput = document.querySelector<HTMLTextAreaElement>('#gradient-output');
+  const gradientStatus = document.querySelector<HTMLParagraphElement>('#gradient-status');
+  const gradientStopRows = Array.from(document.querySelectorAll<HTMLElement>('[data-gradient-stop]'));
+
+  function showGradientStatus(message: string, isError = false): void {
+    if (!gradientStatus) return;
+    gradientStatus.textContent = message;
+    gradientStatus.className = isError ? 'mt-2 text-sm text-rose-700' : 'mt-2 text-sm text-slate-600';
+  }
+
+  function getGradientStops(): Array<{ color: string; position: number }> {
+    const count = Number(gradientCount?.value);
+    if (!Number.isInteger(count) || count < 2 || count > 5) throw new Error('Choose between two and five color stops.');
+    const stops = gradientStopRows.slice(0, count).map((row, index) => {
+      const color = row.querySelector<HTMLInputElement>('[data-gradient-color]')?.value;
+      const positionInput = row.querySelector<HTMLInputElement>('[data-gradient-position]');
+      const rawPosition = positionInput?.value.trim() ?? '';
+      const position = Number(rawPosition);
+      if (!color || !rawPosition || !Number.isInteger(position) || position < 0 || position > 100) {
+        throw new Error(`Stop ${index + 1} needs a whole-number position from 0 to 100.`);
+      }
+      return { color, position };
+    });
+    for (let index = 1; index < stops.length; index += 1) {
+      if (stops[index].position < stops[index - 1].position) {
+        throw new Error('Color stop positions must be in increasing order. Equal positions are allowed.');
+      }
+    }
+    return stops;
+  }
+
+  function renderGradient(): void {
+    if (!gradientType || !gradientCount || !gradientPreview || !gradientOutput) return;
+    gradientStopRows.forEach((row, index) => {
+      row.classList.toggle('hidden', index >= Number(gradientCount.value));
+      row.classList.toggle('grid', index < Number(gradientCount.value));
+    });
+    const angle = Number(gradientAngle?.value ?? 135);
+    if (gradientAngleValue) gradientAngleValue.textContent = `${angle}°`;
+    gradientAngleControl?.classList.toggle('hidden', gradientType.value !== 'linear');
+    try {
+      const stops = getGradientStops();
+      const stopCss = stops.map(({ color, position }) => `${color} ${position}%`).join(', ');
+      const css = gradientType.value === 'linear'
+        ? `linear-gradient(${angle}deg, ${stopCss})`
+        : `radial-gradient(ellipse at center, ${stopCss})`;
+      gradientPreview.style.backgroundImage = css;
+      gradientPreview.setAttribute('aria-label', `Live preview of ${css}`);
+      gradientOutput.value = `background-image: ${css};`;
+      showGradientStatus('Preview updated. Gradient colors and settings remain in this browser.');
+    } catch (error) {
+      showGradientStatus(error instanceof Error ? error.message : 'Unable to update the gradient.', true);
+    }
+  }
+
+  const gradientPresets: Record<string, Array<{ color: string; position: number }>> = {
+    sunset: [
+      { color: '#f97316', position: 0 },
+      { color: '#ec4899', position: 50 },
+      { color: '#7c3aed', position: 100 },
+    ],
+    ocean: [
+      { color: '#0f172a', position: 0 },
+      { color: '#0284c7', position: 50 },
+      { color: '#67e8f9', position: 100 },
+    ],
+    forest: [
+      { color: '#14532d', position: 0 },
+      { color: '#16a34a', position: 50 },
+      { color: '#d9f99d', position: 100 },
+    ],
+  };
+
+  function applyGradientStops(stops: Array<{ color: string; position: number }>): void {
+    if (!gradientCount) return;
+    gradientCount.value = String(stops.length);
+    stops.forEach((stop, index) => {
+      const row = gradientStopRows[index];
+      const colorInput = row?.querySelector<HTMLInputElement>('[data-gradient-color]');
+      const positionInput = row?.querySelector<HTMLInputElement>('[data-gradient-position]');
+      if (colorInput) colorInput.value = stop.color;
+      if (positionInput) positionInput.value = String(stop.position);
+    });
+    renderGradient();
+  }
+
+  gradientType?.addEventListener('change', renderGradient);
+  gradientCount?.addEventListener('change', renderGradient);
+  gradientAngle?.addEventListener('input', renderGradient);
+  gradientStopRows.forEach((row) => {
+    row.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+      input.addEventListener('input', renderGradient);
+      input.addEventListener('change', renderGradient);
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-gradient-preset]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const preset = button.dataset.gradientPreset;
+      if (preset && gradientPresets[preset]) applyGradientStops(gradientPresets[preset]);
+    });
+  });
+  document.querySelector<HTMLButtonElement>('#randomize-gradient')?.addEventListener('click', () => {
+    const count = Number(gradientCount?.value ?? 3);
+    const randomColor = () => {
+      const hue = Math.floor(Math.random() * 360);
+      const lightness = 0.52;
+      const adjustment = 0.78 * Math.min(lightness, 1 - lightness);
+      const channel = (offset: number) => {
+        const sector = (offset + hue / 30) % 12;
+        return lightness - adjustment * Math.max(-1, Math.min(sector - 3, 9 - sector, 1));
+      };
+      return `#${[0, 8, 4].map((offset) => Math.round(channel(offset) * 255).toString(16).padStart(2, '0')).join('')}`;
+    };
+    const stops = Array.from({ length: count }, (_, index) => ({
+      color: randomColor(),
+      position: Math.round(index * 100 / (count - 1)),
+    }));
+    applyGradientStops(stops);
+  });
+  document.querySelector<HTMLButtonElement>('#copy-gradient')?.addEventListener('click', async () => {
+    if (!gradientOutput?.value) {
+      showGradientStatus('Create a valid gradient before copying.', true);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(gradientOutput.value);
+      showGradientStatus('CSS copied to the clipboard.');
+    } catch {
+      showGradientStatus('Clipboard access failed. Select and copy the CSS manually.', true);
+    }
+  });
+
+  renderGradient();
+</script>

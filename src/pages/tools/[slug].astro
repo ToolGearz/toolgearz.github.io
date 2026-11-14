@@ -24,6 +24,9 @@ export function getStaticPaths() {
     'html-encoder-decoder',
     'uuid-generator',
     'color-converter',
+    'jwt-decoder',
+    'csv-json-converter',
+    'css-gradient-generator',
   ]);
   return tools.filter((tool) => !dedicatedToolPages.has(tool.id)).map((tool) => ({
     params: { slug: tool.id },

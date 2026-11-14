@@ -1,0 +1,390 @@
+---
+export const prerender = true;
+
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+const pageUrl = 'https://juttaiblog.online/tools/csv-json-converter';
+const faqs = [
+  {
+    question: 'Does the converter handle quoted commas and newlines?',
+    answer: 'Yes. The CSV parser supports quoted fields, doubled quote escapes, commas or other selected delimiters inside quoted values, and line breaks inside quoted fields.',
+  },
+  {
+    question: 'What does the first row as header option do?',
+    answer: 'For CSV to JSON, the first row becomes object property names. When disabled, each record is represented as an array of values. For JSON to CSV, the option controls whether property names are written as the first CSV row.',
+  },
+  {
+    question: 'Which JSON input shapes are accepted?',
+    answer: 'JSON to CSV expects a top-level array of objects. The CSV columns are the union of object keys, and missing values are written as empty cells.',
+  },
+  {
+    question: 'Is my data uploaded or saved?',
+    answer: 'No. Parsing and conversion run locally in your browser. The tool does not call an API or store your input.',
+  },
+];
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'CSV ↔ JSON Converter',
+  url: pageUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="CSV ↔ JSON Converter | Jutt AI Tools"
+  description="Convert CSV to JSON and JSON to CSV in your browser. Supports quoted commas, multiline fields, comma, semicolon, and tab delimiters."
+  url="/tools/csv-json-converter"
+  analytics={false}
+>
+  <Navbar />
+  <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
+    <header class="py-12 sm:py-16">
+      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Converters &amp; text tools · Runs in your browser</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">CSV ↔ JSON Converter</h1>
+      <p class="mt-3 max-w-2xl leading-7 text-slate-600">Convert tabular CSV data and arrays of JSON objects locally. Quoted fields, multiline values, and common delimiter choices are supported.</p>
+    </header>
+
+    <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="CSV and JSON converter">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label for="csv-json-mode" class="block text-sm font-bold text-slate-900">
+          Conversion
+          <select id="csv-json-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+            <option value="csv-to-json">CSV to JSON</option>
+            <option value="json-to-csv">JSON to CSV</option>
+          </select>
+        </label>
+        <label for="csv-delimiter" class="block text-sm font-bold text-slate-900">
+          CSV delimiter
+          <select id="csv-delimiter" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+            <option value=",">Comma (,)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="&#9;">Tab</option>
+          </select>
+        </label>
+      </div>
+      <label class="inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-slate-800">
+        <input id="csv-header-toggle" type="checkbox" checked class="h-4 w-4 accent-teal-800" />
+        <span id="csv-header-label">First row contains column headers</span>
+      </label>
+      <div>
+        <label for="csv-json-input" class="mb-2 block text-sm font-bold text-slate-900">Input</label>
+        <textarea id="csv-json-input" rows="9" maxlength="200000" spellcheck="false" placeholder="name,city&#10;Ada,London&#10;Grace,&quot;New York, NY&quot;" class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-xs leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:text-sm"></textarea>
+        <p class="mt-2 text-xs text-slate-500">Maximum 200,000 input characters. All conversion runs on this device.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="convert-csv-json" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Convert</button>
+        <button id="clear-csv-json" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear</button>
+      </div>
+      <div id="csv-json-status" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Choose a direction, enter data, and select Convert.</div>
+      <div class="grid gap-3 text-sm sm:grid-cols-2" aria-live="polite">
+        <p class="m-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">Rows: <strong id="csv-json-row-count">—</strong></p>
+        <p class="m-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">Columns: <strong id="csv-json-column-count">—</strong></p>
+      </div>
+      <div>
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <label for="csv-json-output" class="text-sm font-bold text-slate-900">Output</label>
+          <div class="flex flex-wrap gap-2">
+            <button id="copy-csv-json" type="button" disabled class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Copy output</button>
+            <button id="download-csv-json" type="button" disabled class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Download file</button>
+          </div>
+        </div>
+        <textarea id="csv-json-output" rows="9" readonly spellcheck="false" aria-label="Converted output" placeholder="Converted data appears here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-xs leading-6 text-slate-900 outline-none sm:text-sm"></textarea>
+      </div>
+    </section>
+
+    <article class="mt-10 space-y-5 leading-7 text-slate-700">
+      <section>
+        <h2 class="text-2xl font-extrabold text-slate-950">CSV and JSON for everyday data work</h2>
+        <p>CSV (comma-separated values) is a plain-text format for rows and columns. It is easy to export from spreadsheets and databases, but its cells are text and must follow quoting rules when they contain delimiters, line breaks, or quotation marks. JSON (JavaScript Object Notation) represents structured values such as arrays and objects. A JSON array of records can retain clear property names and can be consumed directly by many applications and APIs.</p>
+        <p>This converter runs entirely in your browser and supports CSV-to-JSON and JSON-to-CSV workflows. For CSV input, the parser recognizes quoted cells, doubled quotes, and embedded line breaks, so a value like <code>"New York, NY"</code> remains one field. You can select comma, semicolon, or tab as the delimiter. With the header option enabled, the first CSV row supplies property names; when disabled, rows become arrays. JSON-to-CSV accepts an array of objects, collects their keys as columns, and can write or omit a header row.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">How to convert and export data</h2>
+        <p>Select the conversion direction, choose the delimiter used by the CSV, and set whether the first row contains headers. Paste your input, then select Convert. The converter shows the output along with row and column counts. Use Copy output to copy the converted text or Download file to save it locally as a CSV or JSON document. The conversion direction determines the downloaded file extension.</p>
+        <p>Empty input, malformed quoting, invalid JSON, unsupported JSON shapes, and inputs over 200,000 characters are reported clearly. CSV values are strings; converting them to JSON does not guess whether text such as <code>0012</code> should become a number, since that could discard meaningful leading zeros. When headers repeat or are empty, the converter makes unique property names so one column does not silently overwrite another. Missing JSON object properties produce empty CSV cells.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Common uses and data considerations</h2>
+        <p>Developers can use CSV-to-JSON to prepare small fixtures, inspect a spreadsheet export, or create sample records for a local project. JSON-to-CSV is useful for reviewing a list of similarly shaped objects in a spreadsheet or sharing a simple tabular extract. Semicolon-separated files are common in some regional spreadsheet settings, while tab-delimited text is convenient for copying rows between applications. The selected delimiter is respected inside and outside quoted fields according to CSV quoting rules.</p>
+        <p>Before importing converted data into a production system, review headers, row counts, character encodings, and any application-specific expectations. CSV does not preserve nested object types, and this tool serializes nested JSON values as JSON text inside a CSV cell. Large datasets are better handled by a dedicated streaming or command-line process. No input or output is uploaded or saved by this page. For related tasks, try the <a class="font-bold underline" href="/tools/json-formatter">JSON Formatter</a>, <a class="font-bold underline" href="/tools/json-to-ts">JSON to TypeScript Generator</a>, or <a class="font-bold underline" href="/tools/text-formatter">Text Formatter</a>.</p>
+      </section>
+      <section aria-labelledby="csv-faq-heading">
+        <h2 id="csv-faq-heading" class="text-2xl font-extrabold text-slate-950">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqs.map(({ question, answer }) => (
+            <div>
+              <h3 class="mb-1 text-lg font-bold text-slate-900">{question}</h3>
+              <p class="mb-0">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </article>
+    <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="csv-related-heading">
+      <h2 id="csv-related-heading" class="text-xl font-extrabold text-slate-950">Related developer tools</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/json-formatter">JSON Formatter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/json-to-ts">JSON to TypeScript</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/text-formatter">Text Formatter</a>
+      </div>
+    </section>
+    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const csvJsonMode = document.querySelector<HTMLSelectElement>('#csv-json-mode');
+  const csvDelimiter = document.querySelector<HTMLSelectElement>('#csv-delimiter');
+  const csvHeaderToggle = document.querySelector<HTMLInputElement>('#csv-header-toggle');
+  const csvHeaderLabel = document.querySelector<HTMLSpanElement>('#csv-header-label');
+  const csvJsonInput = document.querySelector<HTMLTextAreaElement>('#csv-json-input');
+  const csvJsonOutput = document.querySelector<HTMLTextAreaElement>('#csv-json-output');
+  const csvJsonStatus = document.querySelector<HTMLDivElement>('#csv-json-status');
+  const rowCountOutput = document.querySelector<HTMLElement>('#csv-json-row-count');
+  const columnCountOutput = document.querySelector<HTMLElement>('#csv-json-column-count');
+  const copyCsvButton = document.querySelector<HTMLButtonElement>('#copy-csv-json');
+  const downloadCsvButton = document.querySelector<HTMLButtonElement>('#download-csv-json');
+
+  function showCsvStatus(message: string, isError = false): void {
+    if (!csvJsonStatus) return;
+    csvJsonStatus.textContent = message;
+    csvJsonStatus.className = isError
+      ? 'rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
+      : 'rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+  }
+
+  function updateCsvMode(): void {
+    if (csvHeaderLabel && csvJsonMode) {
+      csvHeaderLabel.textContent = csvJsonMode.value === 'csv-to-json'
+        ? 'First row contains column headers'
+        : 'Include column headers in CSV output';
+    }
+    if (csvJsonInput && csvJsonMode) {
+      csvJsonInput.placeholder = csvJsonMode.value === 'csv-to-json'
+        ? 'name,city\nAda,London\nGrace,"New York, NY"'
+        : '[{"name":"Ada","city":"London"}]';
+    }
+    clearCsvResult();
+  }
+
+  function clearCsvResult(): void {
+    if (csvJsonOutput) csvJsonOutput.value = '';
+    if (rowCountOutput) rowCountOutput.textContent = '—';
+    if (columnCountOutput) columnCountOutput.textContent = '—';
+    if (copyCsvButton) copyCsvButton.disabled = true;
+    if (downloadCsvButton) downloadCsvButton.disabled = true;
+  }
+
+  function parseCsv(text: string, delimiter: string): string[][] {
+    const rows: string[][] = [];
+    let row: string[] = [];
+    let field = '';
+    let inQuotes = false;
+    let closedQuote = false;
+    let fieldStarted = false;
+    if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+      if (inQuotes) {
+        if (character === '"') {
+          if (text[index + 1] === '"') {
+            field += '"';
+            index += 1;
+          } else {
+            inQuotes = false;
+            closedQuote = true;
+          }
+        } else {
+          field += character;
+        }
+        continue;
+      }
+
+      if (closedQuote && character !== delimiter && character !== '\r' && character !== '\n') {
+        throw new Error(`Unexpected character after a closing quote near character ${index + 1}.`);
+      }
+      if (character === '"' && field.length === 0 && !closedQuote) {
+        inQuotes = true;
+        fieldStarted = true;
+      } else if (character === delimiter) {
+        row.push(field);
+        field = '';
+        closedQuote = false;
+        fieldStarted = false;
+      } else if (character === '\n' || character === '\r') {
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = '';
+        closedQuote = false;
+        fieldStarted = false;
+        if (character === '\r' && text[index + 1] === '\n') index += 1;
+      } else if (character === '"') {
+        throw new Error(`Unexpected quote in an unquoted field near character ${index + 1}.`);
+      } else {
+        field += character;
+        fieldStarted = true;
+      }
+    }
+
+    if (inQuotes) throw new Error('CSV contains a quoted field that was not closed.');
+    if (fieldStarted || row.length > 0) {
+      row.push(field);
+      rows.push(row);
+    }
+    return rows;
+  }
+
+  function makeUniqueHeaders(headers: string[]): string[] {
+    const used = new Set<string>();
+    return headers.map((header, index) => {
+      const base = header.trim() || `column_${index + 1}`;
+      let candidate = base;
+      let suffix = 2;
+      while (used.has(candidate)) {
+        candidate = `${base}_${suffix}`;
+        suffix += 1;
+      }
+      used.add(candidate);
+      return candidate;
+    });
+  }
+
+  function parseCsvToJson(text: string, delimiter: string, hasHeader: boolean): { output: string; rows: number; columns: number } {
+    const records = parseCsv(text, delimiter);
+    if (!records.length) throw new Error('No CSV rows were found.');
+    const columns = records.reduce((maximum, record) => Math.max(maximum, record.length), 0);
+    const dataRows = hasHeader ? records.slice(1) : records;
+    let result: unknown[];
+
+    if (hasHeader) {
+      if (!records[0].length) throw new Error('The CSV header row is empty.');
+      const headers = makeUniqueHeaders(records[0]);
+      result = dataRows.map((record) => Object.fromEntries(
+        headers.map((header, index) => [header, record[index] ?? '']),
+      ));
+    } else {
+      result = dataRows.map((record) => Array.from({ length: columns }, (_, index) => record[index] ?? ''));
+    }
+    return { output: JSON.stringify(result, null, 2), rows: dataRows.length, columns };
+  }
+
+  function escapeCsvField(value: unknown, delimiter: string): string {
+    let text: string;
+    if (value === null || value === undefined) text = '';
+    else if (typeof value === 'object') text = JSON.stringify(value);
+    else text = String(value);
+    return text.includes(delimiter) || /["\r\n]/.test(text)
+      ? `"${text.replace(/"/g, '""')}"`
+      : text;
+  }
+
+  function parseJsonToCsv(text: string, delimiter: string, hasHeader: boolean): { output: string; rows: number; columns: number } {
+    let value: unknown;
+    try {
+      value = JSON.parse(text);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : 'Invalid JSON.';
+      throw new Error(`Could not parse JSON: ${detail}`);
+    }
+    if (!Array.isArray(value) || value.some((record) => typeof record !== 'object' || record === null || Array.isArray(record))) {
+      throw new Error('JSON to CSV requires a top-level array of objects.');
+    }
+
+    const records = value as Array<Record<string, unknown>>;
+    const headers = [...new Set(records.flatMap((record) => Object.keys(record)))];
+    if (!headers.length && records.length) throw new Error('No object properties were found to use as CSV columns.');
+    const csvRows = records.map((record) => headers.map((header) => escapeCsvField(record[header], delimiter)).join(delimiter));
+    if (hasHeader && headers.length) csvRows.unshift(headers.map((header) => escapeCsvField(header, delimiter)).join(delimiter));
+    const output = csvRows.join('\r\n');
+    if (output.length > 500000) throw new Error('Converted output is too large to display. Use a smaller input.');
+    return { output, rows: records.length, columns: headers.length };
+  }
+
+  function convertCsvJson(): void {
+    if (!csvJsonMode || !csvDelimiter || !csvHeaderToggle || !csvJsonInput || !csvJsonOutput) return;
+    clearCsvResult();
+    const input = csvJsonInput.value;
+    if (!input.trim()) {
+      showCsvStatus('Enter CSV or JSON data before converting.', true);
+      return;
+    }
+    if (input.length > 200000) {
+      showCsvStatus('Input is too large. Use 200,000 characters or fewer.', true);
+      return;
+    }
+
+    try {
+      const result = csvJsonMode.value === 'csv-to-json'
+        ? parseCsvToJson(input, csvDelimiter.value, csvHeaderToggle.checked)
+        : parseJsonToCsv(input, csvDelimiter.value, csvHeaderToggle.checked);
+      if (result.output.length > 500000) throw new Error('Converted output is too large to display. Use a smaller input.');
+      csvJsonOutput.value = result.output;
+      if (rowCountOutput) rowCountOutput.textContent = String(result.rows);
+      if (columnCountOutput) columnCountOutput.textContent = String(result.columns);
+      if (copyCsvButton) copyCsvButton.disabled = result.output.length === 0;
+      if (downloadCsvButton) downloadCsvButton.disabled = result.output.length === 0;
+      showCsvStatus(`${result.rows} ${result.rows === 1 ? 'row' : 'rows'} and ${result.columns} ${result.columns === 1 ? 'column' : 'columns'} converted locally.`);
+    } catch (error) {
+      showCsvStatus(error instanceof Error ? error.message : 'Unable to convert this input.', true);
+    }
+  }
+
+  csvJsonMode?.addEventListener('change', updateCsvMode);
+  csvDelimiter?.addEventListener('change', clearCsvResult);
+  csvHeaderToggle?.addEventListener('change', clearCsvResult);
+  document.querySelector<HTMLButtonElement>('#convert-csv-json')?.addEventListener('click', convertCsvJson);
+  document.querySelector<HTMLButtonElement>('#clear-csv-json')?.addEventListener('click', () => {
+    if (csvJsonInput) csvJsonInput.value = '';
+    clearCsvResult();
+    showCsvStatus('Cleared. Enter data and select Convert.');
+    csvJsonInput?.focus();
+  });
+  copyCsvButton?.addEventListener('click', async () => {
+    if (!csvJsonOutput?.value) {
+      showCsvStatus('Convert data before copying the output.', true);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(csvJsonOutput.value);
+      showCsvStatus('Converted output copied to the clipboard.');
+    } catch {
+      showCsvStatus('Clipboard access failed. Select and copy the output manually.', true);
+    }
+  });
+  downloadCsvButton?.addEventListener('click', () => {
+    if (!csvJsonOutput?.value || !csvJsonMode) {
+      showCsvStatus('Convert data before downloading an output file.', true);
+      return;
+    }
+    const isCsv = csvJsonMode.value === 'json-to-csv';
+    const blob = new Blob([csvJsonOutput.value], { type: isCsv ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8' });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = isCsv ? 'converted-data.csv' : 'converted-data.json';
+    link.click();
+    URL.revokeObjectURL(objectUrl);
+    showCsvStatus(`Downloaded converted-data.${isCsv ? 'csv' : 'json'}.`);
+  });
+</script>

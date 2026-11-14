@@ -1,0 +1,325 @@
+---
+export const prerender = true;
+
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+const pageUrl = 'https://juttaiblog.online/tools/jwt-decoder';
+const faqs = [
+  {
+    question: 'Does decoding a JWT verify that it is authentic?',
+    answer: 'No. This tool only decodes the token’s Base64URL sections. It does not verify a signature, issuer, audience, or any other trust condition.',
+  },
+  {
+    question: 'Is my token sent to a server?',
+    answer: 'No. Token parsing and date conversion happen locally in your browser. The tool does not make API calls or store the token.',
+  },
+  {
+    question: 'Why can a decoded token still be invalid?',
+    answer: 'A readable header and payload only show that the token sections contain valid encoded JSON. A server may still reject an invalid signature, expired token, or claims that do not match its policy.',
+  },
+  {
+    question: 'Which JWT timestamps are displayed?',
+    answer: 'The inspector recognizes exp (expiration), iat (issued at), and nbf (not before) when they contain numeric Unix timestamps in seconds.',
+  },
+];
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'JWT Decoder & Inspector',
+  url: pageUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="JWT Decoder & Inspector | Jutt AI Tools"
+  description="Decode JWT headers, payloads, and exp, iat, and nbf timestamps locally. Inspect a token safely in your browser; signatures are not verified."
+  url="/tools/jwt-decoder"
+  analytics={false}
+>
+  <Navbar />
+  <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
+    <header class="py-12 sm:py-16">
+      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">JWT Decoder &amp; Inspector</h1>
+      <p class="mt-3 max-w-2xl leading-7 text-slate-600">Decode a JSON Web Token’s header and payload, inspect common time claims, and copy each token section. Processing stays in your browser.</p>
+    </header>
+
+    <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="JWT decoder and inspector">
+      <div>
+        <label for="jwt-input" class="mb-2 block text-sm font-bold text-slate-900">JSON Web Token</label>
+        <textarea id="jwt-input" rows="5" maxlength="100000" spellcheck="false" autocomplete="off" placeholder="Paste a three-part JWT here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-xs leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:text-sm"></textarea>
+        <p class="mt-2 text-xs text-slate-500">Maximum 100,000 characters. Do not paste credentials you are not authorized to inspect.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="decode-jwt" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Decode token</button>
+        <button id="clear-jwt" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear</button>
+      </div>
+      <p class="m-0 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-950" role="note">Important: this tool decodes token contents but does NOT verify signatures or establish that a token is authentic. Treat decoded claims as untrusted.</p>
+      <div id="jwt-status" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Paste a token and select Decode token.</div>
+      <div id="jwt-results" class="hidden space-y-4">
+        <section class="rounded-2xl border border-slate-200 bg-slate-50 p-4" aria-labelledby="jwt-header-heading">
+          <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <h2 id="jwt-header-heading" class="m-0 text-base font-extrabold text-slate-950">Header</h2>
+            <button type="button" data-copy-jwt="jwt-header" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy header</button>
+          </div>
+          <pre id="jwt-header" class="m-0 max-h-80 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-white p-4 font-mono text-xs leading-6 text-slate-800" tabindex="0"></pre>
+        </section>
+        <section class="rounded-2xl border border-slate-200 bg-slate-50 p-4" aria-labelledby="jwt-payload-heading">
+          <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <h2 id="jwt-payload-heading" class="m-0 text-base font-extrabold text-slate-950">Payload</h2>
+            <button type="button" data-copy-jwt="jwt-payload" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy payload</button>
+          </div>
+          <pre id="jwt-payload" class="m-0 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-white p-4 font-mono text-xs leading-6 text-slate-800" tabindex="0"></pre>
+        </section>
+        <section class="rounded-2xl border border-slate-200 bg-slate-50 p-4" aria-labelledby="jwt-claims-heading">
+          <h2 id="jwt-claims-heading" class="mb-3 text-base font-extrabold text-slate-950">Time claims</h2>
+          <p id="jwt-validity" class="mb-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-800" aria-live="polite"></p>
+          <dl id="jwt-dates" class="m-0 grid gap-2 text-sm sm:grid-cols-3"></dl>
+        </section>
+        <section class="rounded-2xl border border-slate-200 bg-slate-50 p-4" aria-labelledby="jwt-signature-heading">
+          <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <h2 id="jwt-signature-heading" class="m-0 text-base font-extrabold text-slate-950">Signature (encoded)</h2>
+            <button type="button" data-copy-jwt="jwt-signature" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy signature</button>
+          </div>
+          <pre id="jwt-signature" class="m-0 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-xl bg-white p-4 font-mono text-xs leading-6 text-slate-800" tabindex="0"></pre>
+        </section>
+      </div>
+    </section>
+
+    <article class="mt-10 space-y-5 leading-7 text-slate-700">
+      <section>
+        <h2 class="text-2xl font-extrabold text-slate-950">What a JWT decoder shows</h2>
+        <p>A JSON Web Token (JWT) is a compact string commonly used to carry claims between systems. A signed JWT generally has three dot-separated sections: a Base64URL-encoded header, a Base64URL-encoded payload, and a signature. The header usually identifies metadata such as the signing algorithm and token type. The payload contains claims, which may describe a subject, issuer, audience, permissions, or timestamps. The signature is a separate cryptographic value used by a receiving system to detect tampering.</p>
+        <p>This inspector decodes the first two sections as UTF-8 JSON and displays the third section exactly as encoded. It also recognizes the standard exp (expiration), iat (issued at), and nbf (not before) claims when they are numeric Unix timestamps in seconds. These dates can make it easier to inspect test tokens, troubleshoot application flows, or understand which claims a service included.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">How to use the inspector</h2>
+        <p>Paste a compact token into the input and select Decode token, or focus the input and use the button with your keyboard. A valid input must have three dot-separated sections; the header and payload must be valid Base64URL-encoded JSON objects. The page shows each JSON object in an indented form, displays recognized timestamps as local dates, and reports whether an expiration time has passed or how long remains. If the not-before claim is still in the future, the page calls that out. Copy buttons copy the formatted header, formatted payload, or original encoded signature independently.</p>
+        <p>Empty input, malformed sections, invalid UTF-8, invalid JSON, and inputs over the size limit produce a clear error instead of partial results. The Clear button removes the token and its decoded output. The tool performs these operations in your browser without sending the token to an API or storing it.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Security limits and common uses</h2>
+        <p>Decoding is not verification. Anyone can create a string with readable header and payload sections, and changing a signed token’s contents invalidates its signature. This page does not verify signatures, check keys, validate issuer or audience, enforce application rules, or prove that claims are true. Never grant access based only on what a decoded token says. The service that consumes a token must verify its signature and validate the claims it relies on. JWT payloads are encoded, not encrypted, so do not put secrets in them unless a separate encryption layer is used.</p>
+        <p>Developers commonly use a decoder to inspect a development token, check a timestamp claim, or troubleshoot claim serialization. Avoid pasting production credentials into shared or public devices, and do not share screenshots containing sensitive claims. For related browser utilities, see the <a class="font-bold underline" href="/tools/base64-encoder-decoder">Base64 Encoder &amp; Decoder</a>, <a class="font-bold underline" href="/tools/hash-generator">Hash Generator</a>, or <a class="font-bold underline" href="/tools/json-formatter">JSON Formatter</a>.</p>
+      </section>
+      <section aria-labelledby="jwt-faq-heading">
+        <h2 id="jwt-faq-heading" class="text-2xl font-extrabold text-slate-950">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqs.map(({ question, answer }) => (
+            <div>
+              <h3 class="mb-1 text-lg font-bold text-slate-900">{question}</h3>
+              <p class="mb-0">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </article>
+    <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="jwt-related-heading">
+      <h2 id="jwt-related-heading" class="text-xl font-extrabold text-slate-950">Related developer tools</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/base64-encoder-decoder">Base64 Encoder &amp; Decoder</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/hash-generator">Hash Generator</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/json-formatter">JSON Formatter</a>
+      </div>
+    </section>
+    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const jwtInput = document.querySelector<HTMLTextAreaElement>('#jwt-input');
+  const jwtStatus = document.querySelector<HTMLDivElement>('#jwt-status');
+  const jwtResults = document.querySelector<HTMLDivElement>('#jwt-results');
+  const jwtHeader = document.querySelector<HTMLPreElement>('#jwt-header');
+  const jwtPayload = document.querySelector<HTMLPreElement>('#jwt-payload');
+  const jwtSignature = document.querySelector<HTMLPreElement>('#jwt-signature');
+  const jwtValidity = document.querySelector<HTMLParagraphElement>('#jwt-validity');
+  const jwtDates = document.querySelector<HTMLDListElement>('#jwt-dates');
+
+  function showJwtStatus(message: string, isError = false): void {
+    if (!jwtStatus) return;
+    jwtStatus.textContent = message;
+    jwtStatus.className = isError
+      ? 'rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
+      : 'rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+  }
+
+  function decodeBase64UrlJson(section: string, label: string): Record<string, unknown> {
+    if (!section || !/^[A-Za-z0-9_-]+$/.test(section) || section.length % 4 === 1) {
+      throw new Error(`${label} section is not valid Base64URL.`);
+    }
+    const base64 = section.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
+    let binary: string;
+    try {
+      binary = atob(padded);
+    } catch {
+      throw new Error(`${label} section could not be decoded.`);
+    }
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    let text: string;
+    try {
+      text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    } catch {
+      throw new Error(`${label} section is not valid UTF-8.`);
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw new Error(`${label} section does not contain valid JSON.`);
+    }
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      throw new Error(`${label} JSON must be an object.`);
+    }
+    return parsed as Record<string, unknown>;
+  }
+
+  function formatDuration(seconds: number): string {
+    const units: Array<[number, string]> = [
+      [86400, 'day'],
+      [3600, 'hour'],
+      [60, 'minute'],
+      [1, 'second'],
+    ];
+    let remaining = Math.max(0, Math.floor(seconds));
+    const parts: string[] = [];
+    for (const [size, label] of units) {
+      const count = Math.floor(remaining / size);
+      if (count > 0) {
+        parts.push(`${count} ${label}${count === 1 ? '' : 's'}`);
+        remaining %= size;
+      }
+      if (parts.length === 2) break;
+    }
+    return parts.length ? parts.join(', ') : 'less than a second';
+  }
+
+  function renderJwtDates(payload: Record<string, unknown>): void {
+    if (!jwtDates || !jwtValidity) return;
+    jwtDates.replaceChildren();
+    const claims = [
+      { key: 'exp', label: 'Expires' },
+      { key: 'iat', label: 'Issued at' },
+      { key: 'nbf', label: 'Not before' },
+    ];
+    const recognized: Array<{ key: string; seconds: number; date: Date }> = [];
+    for (const claim of claims) {
+      const value = payload[claim.key];
+      if (typeof value !== 'number' || !Number.isFinite(value)) continue;
+      const date = new Date(value * 1000);
+      if (Number.isNaN(date.valueOf())) continue;
+      recognized.push({ key: claim.key, seconds: value, date });
+      const term = document.createElement('dt');
+      term.className = 'font-bold text-slate-700';
+      term.textContent = claim.label;
+      const description = document.createElement('dd');
+      description.className = 'm-0 rounded-lg bg-white px-3 py-2 text-slate-800';
+      description.textContent = date.toLocaleString();
+      jwtDates.append(term, description);
+    }
+
+    const expiration = recognized.find((claim) => claim.key === 'exp');
+    const notBefore = recognized.find((claim) => claim.key === 'nbf');
+    const now = Date.now() / 1000;
+    if (expiration && expiration.seconds <= now) {
+      jwtValidity.textContent = `Expired ${formatDuration(now - expiration.seconds)} ago. This is a timestamp check only; the signature was not verified.`;
+      jwtValidity.className = 'mb-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800';
+    } else if (notBefore && notBefore.seconds > now) {
+      jwtValidity.textContent = `Not active until ${notBefore.date.toLocaleString()} (${formatDuration(notBefore.seconds - now)} from now). The signature was not verified.`;
+      jwtValidity.className = 'mb-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-950';
+    } else if (expiration) {
+      jwtValidity.textContent = `Timestamp is valid for ${formatDuration(expiration.seconds - now)}. This does not verify the token signature or claims.`;
+      jwtValidity.className = 'mb-3 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-bold text-teal-900';
+    } else {
+      jwtValidity.textContent = 'No expiration claim was found. Signature and claims are not verified.';
+      jwtValidity.className = 'mb-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700';
+    }
+    if (!recognized.length) {
+      const empty = document.createElement('p');
+      empty.className = 'm-0 text-sm text-slate-600';
+      empty.textContent = 'No numeric exp, iat, or nbf claims found.';
+      jwtDates.append(empty);
+    }
+  }
+
+  function decodeJwt(): void {
+    if (!jwtInput || !jwtResults || !jwtHeader || !jwtPayload || !jwtSignature) return;
+    jwtResults.classList.add('hidden');
+    if (!jwtInput.value.trim()) {
+      showJwtStatus('Paste a token before decoding.', true);
+      return;
+    }
+    if (jwtInput.value.length > 100000) {
+      showJwtStatus('Token is too large. Use 100,000 characters or fewer.', true);
+      return;
+    }
+    const sections = jwtInput.value.trim().split('.');
+    if (sections.length !== 3 || !sections[0] || !sections[1]) {
+      showJwtStatus('Malformed token: expected a header, payload, and signature separated by two dots.', true);
+      return;
+    }
+    if (sections[2] && (!/^[A-Za-z0-9_-]+$/.test(sections[2]) || sections[2].length % 4 === 1)) {
+      showJwtStatus('Malformed token: signature section is not valid Base64URL.', true);
+      return;
+    }
+    try {
+      const header = decodeBase64UrlJson(sections[0], 'Header');
+      const payload = decodeBase64UrlJson(sections[1], 'Payload');
+      jwtHeader.textContent = JSON.stringify(header, null, 2);
+      jwtPayload.textContent = JSON.stringify(payload, null, 2);
+      jwtSignature.textContent = sections[2] || '(empty signature section)';
+      jwtSignature.dataset.encodedValue = sections[2];
+      renderJwtDates(payload);
+      jwtResults.classList.remove('hidden');
+      showJwtStatus('Token sections decoded locally. Signature verification was not performed.');
+    } catch (error) {
+      showJwtStatus(error instanceof Error ? error.message : 'Unable to decode this token.', true);
+    }
+  }
+
+  document.querySelector<HTMLButtonElement>('#decode-jwt')?.addEventListener('click', decodeJwt);
+  document.querySelector<HTMLButtonElement>('#clear-jwt')?.addEventListener('click', () => {
+    if (jwtInput) jwtInput.value = '';
+    jwtResults?.classList.add('hidden');
+    showJwtStatus('Cleared. Paste a token and select Decode token.');
+    jwtInput?.focus();
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-jwt]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const target = button.dataset.copyJwt ? document.getElementById(button.dataset.copyJwt) : null;
+      const value = target?.id === 'jwt-signature'
+        ? target.dataset.encodedValue
+        : target?.textContent;
+      if (value === undefined || value === null) {
+        showJwtStatus('Decode a token before copying its sections.', true);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(value);
+        showJwtStatus('Token section copied to the clipboard.');
+      } catch {
+        showJwtStatus('Clipboard access failed. Select and copy the section manually.', true);
+      }
+    });
+  });
+</script>

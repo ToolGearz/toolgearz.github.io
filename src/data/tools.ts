@@ -20,7 +20,10 @@ export type ClientAction =
   | 'url-encoder-decoder'
   | 'html-entity-encoder-decoder'
   | 'uuid-generator'
-  | 'color-converter';
+  | 'color-converter'
+  | 'jwt-decoder'
+  | 'csv-json-converter'
+  | 'css-gradient-generator';
 
 interface ToolBase {
   id: string;
@@ -330,6 +333,34 @@ export const tools: Tool[] = [
     clientAction: 'color-converter',
     icon: '◉',
   },
+  {
+    id: 'jwt-decoder',
+    title: 'JWT Decoder & Inspector',
+    category: 'Design & Developer Tools',
+    description: 'Decode JWT headers, payloads, and timestamps locally. Inspect claims without verifying signatures.',
+    type: 'client',
+    clientAction: 'jwt-decoder',
+    icon: 'JWT',
+    placeholder: 'Paste a three-part JSON Web Token...',
+  },
+  {
+    id: 'csv-json-converter',
+    title: 'CSV ↔ JSON Converter',
+    category: 'Converters & Text Tools',
+    description: 'Convert CSV and JSON locally with delimiter options, quoted fields, row counts, and downloadable output.',
+    type: 'client',
+    clientAction: 'csv-json-converter',
+    icon: '↔',
+  },
+  {
+    id: 'css-gradient-generator',
+    title: 'CSS Gradient Generator',
+    category: 'Design & Developer Tools',
+    description: 'Build and preview linear or radial CSS gradients with two to five editable color stops.',
+    type: 'client',
+    clientAction: 'css-gradient-generator',
+    icon: '◒',
+  },
 ];
 
 export const coreToolIds: string[] = [
@@ -345,6 +376,9 @@ export const coreToolIds: string[] = [
   'html-encoder-decoder',
   'uuid-generator',
   'color-converter',
+  'jwt-decoder',
+  'csv-json-converter',
+  'css-gradient-generator',
 ];
 
 // Keep tools in launch order; append new entries so they appear first in listings.
