@@ -65,16 +65,6 @@ const { tool } = Astro.props as { tool: Tool };
         </div>
 
         <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-          <aside
-            class="mb-7 grid min-h-24 place-items-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-center"
-            aria-label="Google AdSense banner ad space"
-          >
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Advertisement</p>
-              <p class="mt-1 text-xs text-slate-500">Ad space</p>
-            </div>
-          </aside>
-
           <form id="tool-form" data-tool-id={tool.id} data-tool-type={tool.type} data-client-action={tool.type === 'client' ? tool.clientAction : ''} class="space-y-4">
             {tool.type === 'ai' ? (
               <>
@@ -268,15 +258,6 @@ const { tool } = Astro.props as { tool: Tool };
             ></div>
           </section>
 
-          <aside
-            class="mt-7 grid min-h-24 place-items-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-center"
-            aria-label="Google AdSense banner ad space"
-          >
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Advertisement</p>
-              <p class="mt-1 text-xs text-slate-500">Ad space</p>
-            </div>
-          </aside>
         </section>
 
         {tool.type === 'ai' && (

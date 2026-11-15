@@ -1,4 +1,4 @@
-const placeholderImage = '/images/blog/placeholder.svg';
+const placeholderImage = '/images/og-default.png';
 
 export function resolveImagePath(imagePath?: string | null) {
   if (!imagePath) return placeholderImage;

@@ -1,7 +1,7 @@
 ---
 import CoreToolLinks from './CoreToolLinks.astro';
 
-const { post, relatedPosts = [], toc = [] } = Astro.props;
+const { post, tool, relatedPosts = [], toc = [] } = Astro.props;
 ---
 
 <article class="article-shell">
@@ -10,11 +10,11 @@ const { post, relatedPosts = [], toc = [] } = Astro.props;
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span aria-hidden="true">›</span>
-        <a href="/blog">{post.category}</a>
+        <a href={`/tools/${tool.id}`}>{tool.title}</a>
       </nav>
 
       <div class="article-header">
-        <span class="eyebrow">{post.category}</span>
+        <span class="eyebrow">Tool guide · {tool.title}</span>
         <h1>{post.title}</h1>
         <div class="article-meta">
           <div class="author-block">
@@ -35,36 +35,16 @@ const { post, relatedPosts = [], toc = [] } = Astro.props;
           alt={post.title}
           loading="eager"
           decoding="async"
-          onerror="this.onerror=null;this.src='/images/blog/placeholder.svg';"
+          onerror="this.onerror=null;this.src='/images/og-default.png';"
         />
       )}
 
       <div class="content">
-        <aside class="article-ad-slot" aria-label="Google AdSense banner ad space">
-          <div>
-            <span class="ad-label">Advertisement</span>
-            <span>Ad space</span>
-          </div>
-        </aside>
         <slot />
         <CoreToolLinks />
-        <aside class="article-ad-slot" aria-label="Google AdSense banner ad space">
-          <div>
-            <span class="ad-label">Advertisement</span>
-            <span>Ad space</span>
-          </div>
-        </aside>
       </div>
 
       <div class="article-footer">
-        {post.tags?.length && (
-          <div class="tag-list" aria-label="Article tags">
-            {post.tags.map((tag) => (
-              <a class="tag-pill" href={`/blog?tag=${encodeURIComponent(tag)}`}>{tag}</a>
-            ))}
-          </div>
-        )}
-
         <div class="share-panel">
           <span>Share:</span>
           <a href="#" class="share-pill" aria-label="Share on Facebook">Facebook</a>
@@ -73,25 +53,26 @@ const { post, relatedPosts = [], toc = [] } = Astro.props;
         </div>
       </div>
 
-      <section class="related-section">
-        <div class="related-header">
-          <h2>You might like</h2>
-          <a class="button outline" href="/blog">See all</a>
-        </div>
-        <div class="related-grid">
-          {relatedPosts.map((item) => (
-            <article class="related-card">
-              <h3><a href={item.path}>{item.title}</a></h3>
-              <p>{item.description}</p>
-              <a class="read-more" href={item.path}>Read article</a>
-            </article>
-          ))}
-        </div>
-      </section>
+      {relatedPosts.length > 0 && (
+        <section class="related-section">
+          <div class="related-header">
+            <h2>More guides for {tool.title}</h2>
+          </div>
+          <div class="related-grid">
+            {relatedPosts.map((item) => (
+              <article class="related-card">
+                <h3><a href={item.path}>{item.title}</a></h3>
+                <p>{item.description}</p>
+                <a class="read-more" href={item.path}>Read guide</a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div class="post-actions">
-        <a class="button secondary" href="/blog">Back to articles</a>
-        <a class="button" href="#comments">Post a comment</a>
+        <a class="button secondary" href={`/tools/${tool.id}`}>Open {tool.title}</a>
+        <a class="button" href="/tools">Browse all tools</a>
       </div>
     </main>
 
@@ -218,30 +199,6 @@ const { post, relatedPosts = [], toc = [] } = Astro.props;
     border-radius: 24px;
     padding: 2rem;
     box-shadow: var(--shadow);
-  }
-
-  .article-ad-slot {
-    display: grid;
-    min-height: 110px;
-    place-items: center;
-    margin: 1.5rem 0;
-    border: 1px dashed var(--border);
-    border-radius: 16px;
-    background: var(--surface-soft);
-    text-align: center;
-  }
-
-  .article-ad-slot .ad-label {
-    color: var(--muted);
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .article-ad-slot span {
-    color: var(--muted);
-    font-size: 0.75rem;
   }
 
   .content :global(h2) {

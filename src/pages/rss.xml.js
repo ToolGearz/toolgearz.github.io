@@ -19,9 +19,9 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Jutt AI Blog</title>
+    <title>Jutt AI Tool Guides</title>
     <link>${baseUrl}</link>
-    <description>A simple AI blog with clear articles and practical insights.</description>
+    <description>Practical guides for using Jutt AI's free online tools.</description>
     ${posts
       .map(
         (post) => `

@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ContactCta from '../components/ContactCta.astro';
 import { servicePages, siteConfig } from '../data/site';
+
+export const prerender = true;
 ---
 
 <Layout title="Services | Jutt AI" description="Explore digital services including web design, SEO, Shopify development, conversion improvements, and content strategy." url="/services">

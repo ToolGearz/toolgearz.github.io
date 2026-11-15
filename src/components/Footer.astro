@@ -1,17 +1,8 @@
 ---
 import { siteConfig } from '../data/site';
 import { newestTools } from '../data/tools';
-import { getCollection } from 'astro:content';
 
 const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0, 10);
-const blogEntries = await getCollection('blog');
-const blogCategories = [...blogEntries.reduce((counts, entry) => {
-  counts.set(entry.data.category, (counts.get(entry.data.category) ?? 0) + 1);
-  return counts;
-}, new Map<string, number>())]
-  .sort(([categoryA, countA], [categoryB, countB]) => countB - countA || categoryA.localeCompare(categoryB))
-  .slice(0, 6)
-  .map(([category]) => category);
 ---
 
 <footer class="site-footer">
@@ -37,18 +28,9 @@ const blogCategories = [...blogEntries.reduce((counts, entry) => {
     </div>
 
     <div class="footer-column">
-      <h3>Blog categories</h3>
-      {blogCategories.map((category) => (
-        <a href={`/blog?category=${encodeURIComponent(category)}`}>{category}</a>
-      ))}
-      <a href="/blog">All articles</a>
-    </div>
-
-    <div class="footer-column">
       <h3>Explore</h3>
       <a href="/about">About the platform</a>
       <a href="/services">Services</a>
-      <a href="/demos">Demos</a>
       <a href="/contact">Contact</a>
       <a href="/privacy">Privacy policy</a>
     </div>

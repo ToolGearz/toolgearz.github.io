@@ -1,6 +1,6 @@
 # Jutt AI
 
-Jutt AI is a hybrid tools hub and SEO blog. The homepage contains the searchable utility catalog and recent articles, `/blog` lists the full archive, and `/blog/<slug>` serves individual articles. Tool pages are generated from the registry at `/tools/<tool-id>`. The site uses Tailwind CSS, Astro server output, and the Cloudflare adapter.
+Jutt AI is a focused directory of free AI generators and browser-based utilities. The homepage and `/tools` link directly to each tool page, which is generated from the registry at [`src/data/tools.ts`](./src/data/tools.ts). The site uses Tailwind CSS, Astro server output, and the Cloudflare adapter.
 
 ## Local development
 
@@ -26,11 +26,11 @@ Append a `Tool` object to [`src/data/tools.ts`](./src/data/tools.ts) with a uniq
 
 The homepage search and category tabs, sitemap, and `/tools/<id>` route all use this registry. The API only accepts configured AI tool IDs.
 
-## Blog content
+## Tool guides
 
-Add Markdown articles under `src/content/blog/`. Each post requires `title`, `description`, `pubDate`, `category`, and `author`; `tags`, `featured`, `heroImage`, and `slug` are optional. If `slug` is omitted, the Markdown filename determines the `/blog/<slug>` URL. Blog routes are generated from the collection and included in the sitemap.
+Markdown guides belong under `src/content/blog/` and must select a valid `toolId` from the tool registry. Keep each guide focused on explaining, demonstrating, or troubleshooting that tool. Posts unrelated to the site's own tools are not part of this collection.
 
-AI tool usage has a client-side limit of 10 generations per device per UTC day. This is a convenience limit stored in browser local storage, not a server-enforced quota. The AdSense spaces are placeholders; connect them to your approved publisher and ad-unit IDs before serving ads.
+AI tool usage has a client-side limit of 10 generations per device per UTC day. This is a convenience limit stored in browser local storage, not a server-enforced quota.
 
 ## Build and deploy
 

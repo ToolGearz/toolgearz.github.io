@@ -7,14 +7,12 @@ export const siteConfig = {
   whatsapp: '923006699738',
   location: 'Remote / Worldwide',
   baseDescription:
-    'Free online AI tools and browser-based utilities for writing, text conversion, and productivity.',
+    'Free online AI tools and browser-based utilities for writing, text conversion, and developer tasks.',
 };
 
 export const navItems = [
   { label: 'Tools', href: '/' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Services', href: '/services' },
-  { label: 'Demos', href: '/demos' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
