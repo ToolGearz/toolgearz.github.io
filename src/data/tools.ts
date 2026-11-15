@@ -23,7 +23,10 @@ export type ClientAction =
   | 'color-converter'
   | 'jwt-decoder'
   | 'csv-json-converter'
-  | 'css-gradient-generator';
+  | 'css-gradient-generator'
+  | 'image-compressor'
+  | 'html-minifier'
+  | 'text-to-speech';
 
 interface ToolBase {
   id: string;
@@ -361,6 +364,33 @@ export const tools: Tool[] = [
     clientAction: 'css-gradient-generator',
     icon: '◒',
   },
+  {
+    id: 'image-compressor',
+    title: 'Image Compressor',
+    category: 'Design & Developer Tools',
+    description: 'Compress JPG, PNG, and WebP images locally with quality and resize controls, before-and-after previews, and downloads.',
+    type: 'client',
+    clientAction: 'image-compressor',
+    icon: '▧',
+  },
+  {
+    id: 'html-minifier',
+    title: 'HTML Minifier & Beautifier',
+    category: 'Design & Developer Tools',
+    description: 'Minify or format HTML locally while preserving content inside pre, textarea, script, and style elements.',
+    type: 'client',
+    clientAction: 'html-minifier',
+    icon: '</>',
+  },
+  {
+    id: 'text-to-speech',
+    title: 'Text to Speech Reader',
+    category: 'Converters & Text Tools',
+    description: 'Read text aloud with your browser’s built-in speech voices, including any installed English, Urdu, and Hindi voices.',
+    type: 'client',
+    clientAction: 'text-to-speech',
+    icon: '🔊',
+  },
 ];
 
 export const coreToolIds: string[] = [
@@ -379,6 +409,9 @@ export const coreToolIds: string[] = [
   'jwt-decoder',
   'csv-json-converter',
   'css-gradient-generator',
+  'image-compressor',
+  'html-minifier',
+  'text-to-speech',
 ];
 
 // Keep tools in launch order; append new entries so they appear first in listings.

@@ -1,0 +1,319 @@
+---
+export const prerender = true;
+
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+const pageUrl = 'https://juttaiblog.online/tools/text-to-speech';
+const faqs = [
+  {
+    question: 'Does this reader send my text to an online service?',
+    answer: 'No. It uses the speech synthesis voices provided by your browser and operating system. The tool does not upload your text or call an external speech API.',
+  },
+  {
+    question: 'Why do I not see an Urdu, Hindi, or English voice?',
+    answer: 'The available voices depend on the device, browser, and installed speech services. This page lists voices reported by your browser; it cannot install missing voices.',
+  },
+  {
+    question: 'Can the reader handle long text?',
+    answer: 'Yes. Text is split at sentence or word boundaries into smaller chunks so the browser is less likely to stop part-way through a long utterance.',
+  },
+  {
+    question: 'Can I pause or resume speech?',
+    answer: 'Use Pause to pause current playback, Resume to continue it, and Stop to cancel the current reading queue. You can also change the voice and speaking controls before starting again.',
+  },
+];
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Text to Speech Reader',
+  url: pageUrl,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript and browser speech synthesis support',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="Text to Speech Reader | Browser Voice Reader | Jutt AI Tools"
+  description="Read text aloud with built-in browser speech voices. Choose a voice, adjust speed, pitch, and volume, then play, pause, resume, or stop privately."
+  url="/tools/text-to-speech"
+  analytics={false}
+>
+  <Navbar />
+  <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
+    <header class="py-12 sm:py-16">
+      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Converters &amp; text tools · Runs in your browser</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Text to Speech Reader</h1>
+      <p class="mt-3 max-w-2xl leading-7 text-slate-600">Listen to text using voices available on your device. Adjust voice, speed, pitch, and volume with playback controls.</p>
+    </header>
+
+    <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="Text to speech reader">
+      <div>
+        <label for="speech-text" class="mb-2 block text-sm font-bold text-slate-900">Text to read aloud</label>
+        <textarea id="speech-text" rows="8" maxlength="100000" placeholder="Type or paste text here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"></textarea>
+        <p class="mt-2 text-right text-xs text-slate-500"><span id="speech-character-count" aria-live="polite">0</span> / 100,000 characters</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label for="speech-voice" class="block text-sm font-bold text-slate-900">
+          Voice
+          <select id="speech-voice" disabled class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 disabled:cursor-not-allowed disabled:opacity-60">
+            <option value="">Loading available voices…</option>
+          </select>
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <label for="speech-speed" class="block text-sm font-bold text-slate-900">
+            Speed: <output id="speech-speed-value" for="speech-speed">1.0×</output>
+            <input id="speech-speed" type="range" min="0.5" max="2" step="0.1" value="1" class="mt-3 block w-full accent-teal-700" />
+          </label>
+          <label for="speech-pitch" class="block text-sm font-bold text-slate-900">
+            Pitch: <output id="speech-pitch-value" for="speech-pitch">1.0</output>
+            <input id="speech-pitch" type="range" min="0" max="2" step="0.1" value="1" class="mt-3 block w-full accent-teal-700" />
+          </label>
+        </div>
+        <label for="speech-volume" class="block text-sm font-bold text-slate-900">
+          Volume: <output id="speech-volume-value" for="speech-volume">100%</output>
+          <input id="speech-volume" type="range" min="0" max="1" step="0.05" value="1" class="mt-3 block w-full accent-teal-700" />
+        </label>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="speech-play" type="button" disabled class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Play</button>
+        <button id="speech-pause" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Pause</button>
+        <button id="speech-resume" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Resume</button>
+        <button id="speech-stop" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Stop</button>
+      </div>
+      <p id="speech-status" class="m-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Checking browser speech support…</p>
+    </section>
+
+    <article class="mt-10 space-y-5 leading-7 text-slate-700">
+      <section>
+        <h2 class="text-2xl font-extrabold text-slate-950">How browser text to speech works</h2>
+        <p>Text to speech turns written words into spoken audio. Modern browsers can expose the operating system’s installed speech voices through the Web Speech API, allowing a page to request speech without sending text to a separate web service. Voice availability and pronunciation vary by device, browser, operating system, and language packs. This reader lists the voices your current browser reports; if your system has English, Urdu, Hindi, or other voices installed, they may appear in the picker with their language codes.</p>
+        <p>The reader uses the browser’s built-in speech synthesis engine and divides long input into shorter pieces. Small chunks reduce the chance that a browser or voice service will stop speaking before reaching the end of a long passage. Speed, pitch, and volume are applied to each chunk. The text is kept in the current page and is not uploaded by this tool. Speech itself is played through the browser and device audio output.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Choose a voice and control playback</h2>
+        <p>Type or paste up to 100,000 characters and pick an available voice. Voices are listed using the names and language tags supplied by your device. Adjust speed to slow down or quicken narration, tune pitch for a higher or lower tone, and set the playback volume. Select Play to start; Pause temporarily suspends the current utterance, Resume continues it, and Stop cancels the reading queue. The character counter updates as you type. If the browser does not support speech synthesis, or reports no usable voices, the page displays a friendly explanation instead of failing silently.</p>
+        <p>Long passages are split near sentence endings where possible and otherwise at word boundaries, so a word is not cut in half. The tool keeps the chunks in memory only for the current reading session. If you edit the input while audio is playing, stop playback and start again to read the revised text. Browser or operating system voice services may have their own limits and may pause when the device locks or another application takes audio focus.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Common uses and accessibility tips</h2>
+        <p>People use read-aloud tools to proofread writing, listen while multitasking, practice pronunciation, review study notes, or reduce the effort of reading a long passage on screen. Listening can reveal awkward phrasing and repeated words that are easy to miss visually. A slower rate can help language learners follow unfamiliar text; a voice matching the language can improve pronunciation, although machine voices may still misread names, abbreviations, and mixed-language sentences.</p>
+        <p>Speech output is one way to access text, not a substitute for clear writing, captions, or assistive technology preferences. Keep the text available so readers can follow along, and use headphones when audio could disturb others. Voice lists are controlled by the local device: this site cannot download voices or guarantee a particular accent. For text preparation, use the <a class="font-bold underline" href="/tools/text-formatter">Text Formatter</a>, <a class="font-bold underline" href="/tools/word-counter">Word &amp; Character Counter</a>, or <a class="font-bold underline" href="/tools/html-encoder-decoder">HTML Entity Encoder &amp; Decoder</a>.</p>
+      </section>
+      <section aria-labelledby="speech-faq-heading">
+        <h2 id="speech-faq-heading" class="text-2xl font-extrabold text-slate-950">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqs.map(({ question, answer }) => (
+            <div>
+              <h3 class="mb-1 text-lg font-bold text-slate-900">{question}</h3>
+              <p class="mb-0">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </article>
+    <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="speech-related-heading">
+      <h2 id="speech-related-heading" class="text-xl font-extrabold text-slate-950">Related text tools</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/text-formatter">Text Formatter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/word-counter">Word &amp; Character Counter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/html-encoder-decoder">HTML Entity Encoder &amp; Decoder</a>
+      </div>
+    </section>
+    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const speechText = document.querySelector<HTMLTextAreaElement>('#speech-text');
+  const characterCount = document.querySelector<HTMLElement>('#speech-character-count');
+  const speechVoice = document.querySelector<HTMLSelectElement>('#speech-voice');
+  const speechStatus = document.querySelector<HTMLParagraphElement>('#speech-status');
+  const playButton = document.querySelector<HTMLButtonElement>('#speech-play');
+  const pauseButton = document.querySelector<HTMLButtonElement>('#speech-pause');
+  const resumeButton = document.querySelector<HTMLButtonElement>('#speech-resume');
+  const stopButton = document.querySelector<HTMLButtonElement>('#speech-stop');
+  const speedInput = document.querySelector<HTMLInputElement>('#speech-speed');
+  const pitchInput = document.querySelector<HTMLInputElement>('#speech-pitch');
+  const volumeInput = document.querySelector<HTMLInputElement>('#speech-volume');
+  const voicesByName = new Map<string, SpeechSynthesisVoice>();
+  const speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  let currentChunks: string[] = [];
+  let chunkIndex = 0;
+  let session = 0;
+
+  function showSpeechStatus(message: string, isError = false): void {
+    if (!speechStatus) return;
+    speechStatus.textContent = message;
+    speechStatus.className = isError
+      ? 'm-0 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
+      : 'm-0 rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+  }
+
+  function refreshSpeechVoices(): void {
+    if (!speechVoice || !speechSupported) return;
+    const voices = window.speechSynthesis.getVoices();
+    voicesByName.clear();
+    const languagePriority = (voice: SpeechSynthesisVoice) => {
+      const language = voice.lang.toLowerCase();
+      return language.startsWith('en') ? 0 : language.startsWith('ur') ? 1 : language.startsWith('hi') ? 2 : 3;
+    };
+    voices.sort((a, b) => languagePriority(a) - languagePriority(b) || a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name));
+    speechVoice.replaceChildren();
+    if (!voices.length) {
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'No voices available on this device';
+      speechVoice.append(option);
+      speechVoice.disabled = true;
+      if (playButton) playButton.disabled = true;
+      showSpeechStatus('No speech voices are available in this browser or on this device. Install a system voice or try another browser.', true);
+      return;
+    }
+
+    for (const [index, voice] of voices.entries()) {
+      const option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = `${voice.name} (${voice.lang})${voice.default ? ' · Default' : ''}`;
+      speechVoice.append(option);
+      voicesByName.set(option.value, voice);
+    }
+    speechVoice.disabled = false;
+    if (playButton) playButton.disabled = false;
+    showSpeechStatus(`${voices.length} voice${voices.length === 1 ? '' : 's'} available. Voice availability depends on your device.`);
+  }
+
+  function splitSpeechText(text: string, maxLength = 180): string[] {
+    const chunks: string[] = [];
+    let remaining = text.trim();
+    while (remaining.length) {
+      if (remaining.length <= maxLength) {
+        chunks.push(remaining);
+        break;
+      }
+      const windowText = remaining.slice(0, maxLength);
+      const sentenceMatches = [...windowText.matchAll(/[.!?。؟](?:["'”’)]*)\s+/g)];
+      const sentenceEnd = sentenceMatches.length ? (sentenceMatches[sentenceMatches.length - 1].index ?? 0) + sentenceMatches[sentenceMatches.length - 1][0].length : 0;
+      const splitAt = sentenceEnd > maxLength * 0.45 ? sentenceEnd : Math.max(windowText.lastIndexOf(' '), windowText.lastIndexOf('\n'));
+      const boundary = splitAt > 0 ? splitAt : maxLength;
+      const chunk = remaining.slice(0, boundary).trim();
+      if (chunk) chunks.push(chunk);
+      remaining = remaining.slice(boundary).trimStart();
+    }
+    return chunks;
+  }
+
+  function updatePlaybackButtons(playing: boolean, paused: boolean): void {
+    if (playButton) playButton.disabled = !speechSupported || voicesByName.size === 0 || playing;
+    if (pauseButton) pauseButton.disabled = !playing || paused;
+    if (resumeButton) resumeButton.disabled = !playing || !paused;
+    if (stopButton) stopButton.disabled = !playing;
+  }
+
+  function speakNextChunk(activeSession: number): void {
+    if (activeSession !== session) return;
+    if (chunkIndex >= currentChunks.length) {
+      updatePlaybackButtons(false, false);
+      showSpeechStatus('Finished reading the text.');
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(currentChunks[chunkIndex]);
+    const voice = speechVoice ? voicesByName.get(speechVoice.value) : undefined;
+    if (voice) utterance.voice = voice;
+    if (speedInput) utterance.rate = Number(speedInput.value);
+    if (pitchInput) utterance.pitch = Number(pitchInput.value);
+    if (volumeInput) utterance.volume = Number(volumeInput.value);
+    utterance.onend = () => {
+      if (activeSession !== session) return;
+      chunkIndex += 1;
+      speakNextChunk(activeSession);
+    };
+    utterance.onerror = (event) => {
+      if (activeSession !== session || event.error === 'canceled' || event.error === 'interrupted') return;
+      updatePlaybackButtons(false, false);
+      showSpeechStatus(`Speech could not continue: ${event.error}. Try another voice or browser.`, true);
+    };
+    window.speechSynthesis.speak(utterance);
+    showSpeechStatus(`Reading part ${chunkIndex + 1} of ${currentChunks.length}…`);
+  }
+
+  speechText?.addEventListener('input', () => {
+    if (characterCount) characterCount.textContent = String(speechText.value.length);
+  });
+  const sliderPairs = [
+    { input: speedInput, output: document.querySelector<HTMLOutputElement>('#speech-speed-value'), format: (value: string) => `${Number(value).toFixed(1)}×` },
+    { input: pitchInput, output: document.querySelector<HTMLOutputElement>('#speech-pitch-value'), format: (value: string) => Number(value).toFixed(1) },
+    { input: volumeInput, output: document.querySelector<HTMLOutputElement>('#speech-volume-value'), format: (value: string) => `${Math.round(Number(value) * 100)}%` },
+  ];
+  sliderPairs.forEach(({ input, output, format }) => {
+    input?.addEventListener('input', () => {
+      if (input && output) output.textContent = format(input.value);
+    });
+  });
+
+  playButton?.addEventListener('click', () => {
+    if (!speechText?.value.trim()) {
+      showSpeechStatus('Enter some text before starting playback.', true);
+      speechText?.focus();
+      return;
+    }
+    if (speechText.value.length > 100000) {
+      showSpeechStatus('Text exceeds the 100,000 character limit.', true);
+      return;
+    }
+    if (!voicesByName.size) {
+      showSpeechStatus('No speech voices are available. Install a system voice or try another browser.', true);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    session += 1;
+    currentChunks = splitSpeechText(speechText.value);
+    chunkIndex = 0;
+    updatePlaybackButtons(true, false);
+    speakNextChunk(session);
+  });
+  pauseButton?.addEventListener('click', () => {
+    if (!window.speechSynthesis.speaking) return;
+    window.speechSynthesis.pause();
+    updatePlaybackButtons(true, true);
+    showSpeechStatus('Playback paused.');
+  });
+  resumeButton?.addEventListener('click', () => {
+    if (!window.speechSynthesis.paused) return;
+    window.speechSynthesis.resume();
+    updatePlaybackButtons(true, false);
+    showSpeechStatus('Playback resumed.');
+  });
+  stopButton?.addEventListener('click', () => {
+    session += 1;
+    window.speechSynthesis.cancel();
+    currentChunks = [];
+    chunkIndex = 0;
+    updatePlaybackButtons(false, false);
+    showSpeechStatus('Playback stopped.');
+  });
+
+  if (!speechSupported) {
+    if (playButton) playButton.disabled = true;
+    showSpeechStatus('Text to speech is not supported in this browser. Try a current desktop or mobile browser with Web Speech support.', true);
+  } else {
+    refreshSpeechVoices();
+    window.speechSynthesis.addEventListener('voiceschanged', refreshSpeechVoices);
+  }
+</script>

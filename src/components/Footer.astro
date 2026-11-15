@@ -1,9 +1,9 @@
 ---
 import { siteConfig } from '../data/site';
-import { coreToolIds, tools } from '../data/tools';
+import { newestTools } from '../data/tools';
 import { getCollection } from 'astro:content';
 
-const coreTools = tools.filter((tool) => coreToolIds.includes(tool.id));
+const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0, 10);
 const blogEntries = await getCollection('blog');
 const blogCategories = [...blogEntries.reduce((counts, entry) => {
   counts.set(entry.data.category, (counts.get(entry.data.category) ?? 0) + 1);
@@ -27,14 +27,13 @@ const blogCategories = [...blogEntries.reduce((counts, entry) => {
       <div class="social-links" aria-label="Social links">
         <a href={`mailto:${siteConfig.email}`} aria-label="Email Jutt AI">Email</a>
         <a href="/contact" aria-label="Contact Jutt AI">Contact</a>
-        <a href="/#tools" aria-label="Browse all tools">All tools</a>
       </div>
     </div>
 
     <div class="footer-column">
-      <h3>Core tools</h3>
-      {coreTools.map((tool) => <a href={`/tools/${tool.id}`}>{tool.title}</a>)}
-      <a href="/tools">Browse all tools</a>
+      <h3>Latest tools</h3>
+      {footerTools.map((tool) => <a href={`/tools/${tool.id}`}>{tool.title}</a>)}
+      <a class="footer-all-tools" href="/tools">All tools <span aria-hidden="true">→</span></a>
     </div>
 
     <div class="footer-column">
@@ -153,6 +152,21 @@ const blogCategories = [...blogEntries.reduce((counts, entry) => {
 
   .footer-column a:hover {
     transform: translateX(2px);
+  }
+
+  .footer-column .footer-all-tools {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    margin-top: 0.25rem;
+    padding: 0.45rem 1rem;
+    border: 1px solid rgba(94, 234, 212, 0.35);
+    border-radius: 999px;
+    background: rgba(45, 212, 191, 0.12);
+    color: #ccfbf1;
+    font-weight: 700;
   }
 
   .social-links {

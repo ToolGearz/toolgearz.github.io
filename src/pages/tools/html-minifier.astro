@@ -1,0 +1,331 @@
+---
+export const prerender = true;
+
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+const pageUrl = 'https://juttaiblog.online/tools/html-minifier';
+const faqs = [
+  {
+    question: 'Does minification change code inside script, style, pre, or textarea?',
+    answer: 'No. The complete content of those elements, including the opening and closing tags, is protected and restored unchanged after processing.',
+  },
+  {
+    question: 'What does removing optional quotes do?',
+    answer: 'It removes quotes only around simple attribute values containing letters, digits, periods, underscores, colons, or hyphens. This option is off by default and values with spaces or special characters stay quoted.',
+  },
+  {
+    question: 'Can the beautifier validate my HTML?',
+    answer: 'No. It formats markup for readability but does not validate HTML conformance, repair every malformed document, or replace a proper parser and linter.',
+  },
+  {
+    question: 'Is my HTML sent to a server?',
+    answer: 'No. Formatting and minification run entirely in your browser. The page makes no API calls and does not save the input.',
+  },
+];
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'HTML Minifier & Beautifier',
+  url: pageUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="HTML Minifier & Beautifier | Jutt AI Tools"
+  description="Minify or beautify HTML locally. Preserve pre, textarea, script, and style contents, compare byte sizes, and copy or download the result."
+  url="/tools/html-minifier"
+  analytics={false}
+>
+  <Navbar />
+  <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
+    <header class="py-12 sm:py-16">
+      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">HTML Minifier &amp; Beautifier</h1>
+      <p class="mt-3 max-w-2xl leading-7 text-slate-600">Reduce HTML whitespace or format markup for easier reading. Sensitive element contents stay unchanged, and your code remains on this device.</p>
+    </header>
+
+    <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="HTML minifier and beautifier">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label for="html-mode" class="block text-sm font-bold text-slate-900">
+          Action
+          <select id="html-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+            <option value="minify">Minify HTML</option>
+            <option value="beautify">Beautify HTML</option>
+          </select>
+        </label>
+        <div class="flex items-end">
+          <button id="html-sample" type="button" class="min-h-11 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Load sample HTML</button>
+        </div>
+      </div>
+      <fieldset id="html-options" class="flex flex-wrap gap-x-6 gap-y-3">
+        <legend class="mb-2 text-sm font-extrabold text-slate-900">Minify options</legend>
+        <label class="inline-flex min-h-11 items-center gap-2 text-sm text-slate-700">
+          <input id="html-remove-comments" type="checkbox" checked class="h-4 w-4 accent-teal-800" /> Remove comments
+        </label>
+        <label class="inline-flex min-h-11 items-center gap-2 text-sm text-slate-700">
+          <input id="html-collapse-whitespace" type="checkbox" checked class="h-4 w-4 accent-teal-800" /> Collapse whitespace
+        </label>
+        <label class="inline-flex min-h-11 items-center gap-2 text-sm text-slate-700">
+          <input id="html-remove-quotes" type="checkbox" class="h-4 w-4 accent-teal-800" /> Remove optional attribute quotes
+        </label>
+      </fieldset>
+      <div>
+        <label for="html-source" class="mb-2 block text-sm font-bold text-slate-900">HTML input</label>
+        <textarea id="html-source" rows="10" maxlength="1000000" spellcheck="false" placeholder="Paste HTML to minify or beautify..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-xs leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:text-sm"></textarea>
+        <p class="mt-2 text-xs text-slate-500">Maximum 1,000,000 characters. Contents inside pre, textarea, script, and style are preserved verbatim.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="process-html" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Minify HTML</button>
+        <button id="clear-html" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear</button>
+      </div>
+      <p id="html-status" class="m-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Enter HTML or load the sample, then choose an action.</p>
+      <div class="grid gap-3 text-sm sm:grid-cols-3" aria-live="polite">
+        <p class="m-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">Original: <strong id="html-original-size">—</strong></p>
+        <p class="m-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">Result: <strong id="html-result-size">—</strong></p>
+        <p class="m-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">Change: <strong id="html-saved">—</strong></p>
+      </div>
+      <div>
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <label for="html-result" class="text-sm font-bold text-slate-900">Output</label>
+          <div class="flex flex-wrap gap-2">
+            <button id="copy-html" type="button" disabled class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Copy output</button>
+            <button id="download-html" type="button" disabled class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Download HTML</button>
+          </div>
+        </div>
+        <textarea id="html-result" rows="10" readonly spellcheck="false" aria-label="Minified or beautified HTML output" placeholder="The processed HTML will appear here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-xs leading-6 text-slate-900 outline-none sm:text-sm"></textarea>
+      </div>
+    </section>
+
+    <article class="mt-10 space-y-5 leading-7 text-slate-700">
+      <section>
+        <h2 class="text-2xl font-extrabold text-slate-950">What HTML minification and formatting do</h2>
+        <p>HTML minification removes unnecessary source formatting to reduce the number of bytes in a document. Common changes include removing comments, collapsing repeated whitespace, and shortening markup where doing so is safe. Fewer transferred bytes can help delivery, but production sites should also use a build pipeline and test the rendered result because whitespace can be meaningful in text and templates. This tool provides a quick, local way to inspect a small HTML fragment or compare a source with a compact result.</p>
+        <p>Beautifying performs the opposite kind of presentation change: it adds indentation and line breaks around markup so nested elements are easier to inspect. This page offers both actions and lets you choose comment removal, whitespace collapsing, and optional attribute quote removal for minification. Quote removal is off by default and only applies to simple values that do not need quoting. The full contents of <code>pre</code>, <code>textarea</code>, <code>script</code>, and <code>style</code> elements are protected verbatim in both modes, so code examples, user text, scripts, and CSS are not reformatted by the tool.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">How to minify or beautify HTML</h2>
+        <p>Paste markup into the input, choose Minify HTML or Beautify HTML, and select the options that suit the task. You can load the sample to see how protected sections behave. After processing, compare original and result sizes, copy the output, or download it as an HTML file. The size calculation uses UTF-8 bytes rather than character count, so non-ASCII text is measured according to its encoded size.</p>
+        <p>Empty input and input above one million characters are rejected with a clear message. This utility is a lightweight formatter, not a complete HTML parser, validator, sanitizer, or template compiler. Its simple whitespace and indentation rules are intended for ordinary markup snippets; always review generated output in the context of your application. If a browser cannot access the clipboard, select and copy the result manually.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-extrabold text-slate-950">Practical uses and content safety</h2>
+        <p>Developers often minify a small snippet before embedding it in a static page, compare the cost of comments and formatting, or beautify compressed markup while debugging a layout. Comment removal can reduce clutter, but comments may contain build directives or information your workflow expects, so review them before stripping. Whitespace collapsing can change text rendered between inline elements. For that reason, a minified result should be tested in its real page and not treated as a guaranteed behavior-preserving build artifact.</p>
+        <p>Optional quotes are removed only from values with a conservative set of characters; attributes containing spaces, equals signs, or punctuation remain quoted. Raw content blocks are kept intact, but the tool does not parse every browser edge case or custom template syntax. Do not use it to sanitize untrusted HTML or to replace security escaping. Processing occurs on-device with no API calls or external libraries. For related code workflows, try the <a class="font-bold underline" href="/tools/css-minifier">CSS Minifier</a>, <a class="font-bold underline" href="/tools/svg-formatter">SVG Formatter</a>, or <a class="font-bold underline" href="/tools/json-formatter">JSON Formatter</a>.</p>
+      </section>
+      <section aria-labelledby="html-faq-heading">
+        <h2 id="html-faq-heading" class="text-2xl font-extrabold text-slate-950">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqs.map(({ question, answer }) => (
+            <div>
+              <h3 class="mb-1 text-lg font-bold text-slate-900">{question}</h3>
+              <p class="mb-0">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </article>
+    <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="html-related-heading">
+      <h2 id="html-related-heading" class="text-xl font-extrabold text-slate-950">Related developer tools</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-minifier">CSS Minifier</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/svg-formatter">SVG Formatter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/json-formatter">JSON Formatter</a>
+      </div>
+    </section>
+    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const htmlMode = document.querySelector<HTMLSelectElement>('#html-mode');
+  const htmlOptions = document.querySelector<HTMLFieldSetElement>('#html-options');
+  const htmlSource = document.querySelector<HTMLTextAreaElement>('#html-source');
+  const htmlResult = document.querySelector<HTMLTextAreaElement>('#html-result');
+  const htmlStatus = document.querySelector<HTMLParagraphElement>('#html-status');
+  const htmlOriginalSize = document.querySelector<HTMLElement>('#html-original-size');
+  const htmlResultSize = document.querySelector<HTMLElement>('#html-result-size');
+  const htmlSaved = document.querySelector<HTMLElement>('#html-saved');
+  const copyHtmlButton = document.querySelector<HTMLButtonElement>('#copy-html');
+  const downloadHtmlButton = document.querySelector<HTMLButtonElement>('#download-html');
+
+  function showHtmlStatus(message: string, isError = false): void {
+    if (!htmlStatus) return;
+    htmlStatus.textContent = message;
+    htmlStatus.className = isError
+      ? 'm-0 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
+      : 'm-0 rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+  }
+
+  function protectRawElements(source: string): { text: string; blocks: string[] } {
+    const blocks: string[] = [];
+    let marker = '__HTML_RAW_BLOCK_';
+    while (source.includes(marker)) marker = `_${marker}`;
+    const text = source.replace(/<(pre|textarea|script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, (block) => {
+      const token = `${marker}${blocks.length}__`;
+      blocks.push(block);
+      return token;
+    });
+    return { text, blocks };
+  }
+
+  function restoreRawElements(text: string, blocks: string[]): string {
+    return text.replace(/__+HTML_RAW_BLOCK_(\d+)__/g, (token, index: string) => blocks[Number(index)] ?? token);
+  }
+
+  function minifyHtml(source: string): string {
+    const protectedSource = protectRawElements(source);
+    let html = protectedSource.text;
+    const removeComments = document.querySelector<HTMLInputElement>('#html-remove-comments')?.checked ?? false;
+    const collapseWhitespace = document.querySelector<HTMLInputElement>('#html-collapse-whitespace')?.checked ?? false;
+    const removeQuotes = document.querySelector<HTMLInputElement>('#html-remove-quotes')?.checked ?? false;
+
+    if (removeComments) html = html.replace(/<!--[\s\S]*?-->/g, '');
+    const tokens = html.split(/(<[^>]*>)/g);
+    html = tokens.map((token) => {
+      if (token.startsWith('<') && token.endsWith('>')) {
+        return removeQuotes
+          ? token.replace(/(\s[\w:-]+)=["']([A-Za-z0-9._:-]+)["']/g, '$1=$2')
+          : token;
+      }
+      return collapseWhitespace ? token.replace(/\s+/g, ' ') : token;
+    }).join('');
+    return restoreRawElements(html.trim(), protectedSource.blocks);
+  }
+
+  function beautifyHtml(source: string): string {
+    const protectedSource = protectRawElements(source);
+    const tokens = protectedSource.text.match(/<!--[\s\S]*?-->|<![^>]*>|<\/?[^>]+>|[^<]+/g) ?? [];
+    const voidElements = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+    const inlineElements = new Set(['a', 'abbr', 'b', 'bdi', 'bdo', 'cite', 'code', 'em', 'i', 'label', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'time']);
+    let indent = 0;
+    const output: string[] = [];
+    for (const token of tokens) {
+      const trimmed = token.trim();
+      if (!trimmed) continue;
+      const closing = trimmed.match(/^<\/\s*([a-z0-9-]+)/i);
+      const opening = trimmed.match(/^<\s*([a-z0-9-]+)/i);
+      const tagName = (closing?.[1] ?? opening?.[1] ?? '').toLowerCase();
+      if (closing && !inlineElements.has(tagName)) indent = Math.max(0, indent - 1);
+      const previous = output[output.length - 1] ?? '';
+      const previousTag = previous.match(/^<\/?\s*([a-z0-9-]+)/i)?.[1]?.toLowerCase() ?? '';
+      const keepInline = inlineElements.has(tagName) || inlineElements.has(previousTag);
+      const line = `${'  '.repeat(indent)}${trimmed}`;
+      if (keepInline && output.length && !closing) output[output.length - 1] = `${previous} ${trimmed}`;
+      else if (keepInline && closing && output.length && !previous.endsWith('>')) output[output.length - 1] = `${previous}${trimmed}`;
+      else output.push(line);
+      if (opening && !closing && !voidElements.has(tagName) && !inlineElements.has(tagName)) indent += 1;
+    }
+    return restoreRawElements(output.join('\n'), protectedSource.blocks);
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    return `${(bytes / 1024).toFixed(2)} KB`;
+  }
+
+  function clearHtmlResult(): void {
+    if (htmlResult) htmlResult.value = '';
+    if (htmlOriginalSize) htmlOriginalSize.textContent = '—';
+    if (htmlResultSize) htmlResultSize.textContent = '—';
+    if (htmlSaved) htmlSaved.textContent = '—';
+    if (copyHtmlButton) copyHtmlButton.disabled = true;
+    if (downloadHtmlButton) downloadHtmlButton.disabled = true;
+  }
+
+  function updateHtmlMode(): void {
+    const minifying = htmlMode?.value === 'minify';
+    if (htmlOptions) htmlOptions.disabled = !minifying;
+    const processButton = document.querySelector<HTMLButtonElement>('#process-html');
+    if (processButton) processButton.textContent = minifying ? 'Minify HTML' : 'Beautify HTML';
+    clearHtmlResult();
+  }
+
+  function processHtml(): void {
+    if (!htmlSource || !htmlResult || !htmlMode) return;
+    clearHtmlResult();
+    const source = htmlSource.value;
+    if (!source.trim()) {
+      showHtmlStatus('Enter HTML before processing.', true);
+      return;
+    }
+    if (source.length > 1000000) {
+      showHtmlStatus('Input is too large. Use 1,000,000 characters or fewer.', true);
+      return;
+    }
+    try {
+      const result = htmlMode.value === 'minify' ? minifyHtml(source) : beautifyHtml(source);
+      htmlResult.value = result;
+      const encoder = new TextEncoder();
+      const before = encoder.encode(source).length;
+      const after = encoder.encode(result).length;
+      const saved = before ? ((before - after) / before) * 100 : 0;
+      if (htmlOriginalSize) htmlOriginalSize.textContent = formatBytes(before);
+      if (htmlResultSize) htmlResultSize.textContent = formatBytes(after);
+      if (htmlSaved) htmlSaved.textContent = `${saved.toFixed(1)}% ${saved >= 0 ? 'smaller' : 'larger'}`;
+      if (copyHtmlButton) copyHtmlButton.disabled = !result;
+      if (downloadHtmlButton) downloadHtmlButton.disabled = !result;
+      showHtmlStatus(`${htmlMode.value === 'minify' ? 'Minified' : 'Beautified'} locally. Review the output before using it.`);
+    } catch (error) {
+      showHtmlStatus(error instanceof Error ? error.message : 'Unable to process this HTML.', true);
+    }
+  }
+
+  htmlMode?.addEventListener('change', updateHtmlMode);
+  document.querySelector<HTMLButtonElement>('#process-html')?.addEventListener('click', processHtml);
+  document.querySelector<HTMLButtonElement>('#html-sample')?.addEventListener('click', () => {
+    if (!htmlSource) return;
+    htmlSource.value = '<!doctype html>\n<html>\n  <body>\n    <!-- sample comment -->\n    <h1 class="title">Hello, <em>world</em>!</h1>\n    <pre>  keep   this\n    exactly</pre>\n    <script>const greeting = "hello  world";<\/script>\n  </body>\n</html>';
+    showHtmlStatus('Sample loaded. Choose Minify or Beautify to see the result.');
+    htmlSource.focus();
+  });
+  document.querySelector<HTMLButtonElement>('#clear-html')?.addEventListener('click', () => {
+    if (htmlSource) htmlSource.value = '';
+    clearHtmlResult();
+    showHtmlStatus('Cleared. Enter HTML or load the sample.');
+    htmlSource?.focus();
+  });
+  copyHtmlButton?.addEventListener('click', async () => {
+    if (!htmlResult?.value) {
+      showHtmlStatus('Process HTML before copying the result.', true);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(htmlResult.value);
+      showHtmlStatus('HTML copied to the clipboard.');
+    } catch {
+      showHtmlStatus('Clipboard access failed. Select and copy the result manually.', true);
+    }
+  });
+  downloadHtmlButton?.addEventListener('click', () => {
+    if (!htmlResult?.value) {
+      showHtmlStatus('Process HTML before downloading the result.', true);
+      return;
+    }
+    const url = URL.createObjectURL(new Blob([htmlResult.value], { type: 'text/html;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'formatted.html';
+    link.click();
+    URL.revokeObjectURL(url);
+    showHtmlStatus('Downloaded formatted.html.');
+  });
+</script>
