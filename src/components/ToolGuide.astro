@@ -1,0 +1,112 @@
+---
+import { tools } from '../data/tools';
+import type { ToolGuideContent } from '../data/tool-guides';
+
+interface Props {
+  toolId: string;
+  guide: ToolGuideContent;
+}
+
+const { toolId, guide } = Astro.props;
+const tool = tools.find(({ id }) => id === toolId);
+
+if (!tool) {
+  throw new Error(`Tool guide references an unknown tool: ${toolId}`);
+}
+
+const relatedTools = guide.relatedToolIds.map((id) => {
+  const relatedTool = tools.find((entry) => entry.id === id);
+  if (!relatedTool) {
+    throw new Error(`Tool guide references an unknown related tool: ${id}`);
+  }
+  return relatedTool;
+});
+const pageUrl = `https://juttaiblog.online/tools/${tool.id}`;
+const faqs = guide.faqs;
+const webApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: tool.title,
+  description: tool.description,
+  url: pageUrl,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<article class="mt-10 space-y-8 text-slate-700" aria-labelledby="tool-guide-heading">
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <h2 id="tool-guide-heading" class="text-2xl font-black tracking-tight text-slate-950">About the {tool.title}</h2>
+    <p class="mt-4 leading-7">{guide.overview}</p>
+  </section>
+
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="tool-guide-steps">
+    <h2 id="tool-guide-steps" class="text-xl font-black text-slate-950">How to use this tool</h2>
+    <ol class="mt-4 list-decimal space-y-3 pl-6 leading-7 marker:font-bold marker:text-teal-800">
+      {guide.steps.map((step) => <li>{step}</li>)}
+    </ol>
+  </section>
+
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="tool-guide-example">
+    <h2 id="tool-guide-example" class="text-xl font-black text-slate-950">Example</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div>
+        <h3 class="text-sm font-bold text-slate-900">Input</h3>
+        <pre class="mt-2 overflow-x-auto rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-800"><code>{guide.exampleInput}</code></pre>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-slate-900">Possible output</h3>
+        <pre class="mt-2 overflow-x-auto rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-800"><code>{guide.exampleOutput}</code></pre>
+      </div>
+    </div>
+    <p class="mt-4 leading-7">{guide.exampleNotes}</p>
+  </section>
+
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="tool-guide-tips">
+    <h2 id="tool-guide-tips" class="text-xl font-black text-slate-950">Practical tips and limitations</h2>
+    <p class="mt-4 leading-7">{guide.practicalNotes}</p>
+  </section>
+
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="tool-guide-faq">
+    <h2 id="tool-guide-faq" class="text-xl font-black text-slate-950">Frequently asked questions</h2>
+    <div class="mt-4 divide-y divide-slate-200">
+      {faqs.map((faq) => (
+        <details class="py-4">
+          <summary class="cursor-pointer font-bold text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2">{faq.question}</summary>
+          <p class="mb-0 mt-3 leading-7">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <nav class="rounded-3xl border border-teal-200 bg-teal-50 p-6 sm:p-8" aria-label="Related tools">
+    <h2 class="text-xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-3 leading-7">{guide.relatedNote}</p>
+    <ul class="mt-4 flex flex-wrap gap-3">
+      {relatedTools.map((relatedTool) => (
+        <li>
+          <a
+            href={`/tools/${relatedTool.id}`}
+            class="inline-flex rounded-full border border-teal-200 bg-white px-4 py-2 text-sm font-bold text-teal-900 hover:border-teal-500 hover:bg-teal-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
+          >
+            {relatedTool.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</article>
+
+<script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />

@@ -4,6 +4,8 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 ---
 
@@ -50,6 +52,7 @@ import '../../styles/global.css';
       </div>
       <p class="m-0 text-xs leading-5 text-slate-500">Uses standard five-field cron syntax with numeric values, lists, ranges, and steps. Day-of-month and day-of-week follow traditional cron OR behavior when both are restricted.</p>
     </section>
+    <ToolGuide toolId="cron-parser" guide={toolGuides['cron-parser']} />
   </main>
   <Footer />
 </Layout>

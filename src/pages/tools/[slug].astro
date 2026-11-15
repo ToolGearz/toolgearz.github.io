@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
 import { tools, type Tool } from '../../data/tools';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 
 export const prerender = true;
@@ -38,6 +40,11 @@ export function getStaticPaths() {
 }
 
 const { tool } = Astro.props as { tool: Tool };
+const guide = toolGuides[tool.id];
+
+if (!guide) {
+  throw new Error(`Missing guide content for tool: ${tool.id}`);
+}
 ---
 
 <Layout
@@ -265,6 +272,7 @@ const { tool } = Astro.props as { tool: Tool };
             AI use is limited to 10 generations per device per UTC day. Avoid submitting sensitive personal information.
           </p>
         )}
+        <ToolGuide toolId={tool.id} guide={guide} />
     </>
   </main>
   <Footer />

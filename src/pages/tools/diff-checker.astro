@@ -4,6 +4,8 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 ---
 
@@ -46,6 +48,7 @@ import '../../styles/global.css';
       <p id="diff-status" class="m-0 text-sm text-slate-600" role="status" aria-live="polite"></p>
       <div id="diff-output" class="hidden overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" aria-label="Diff results"></div>
     </section>
+    <ToolGuide toolId="diff-checker" guide={toolGuides['diff-checker']} />
   </main>
   <Footer />
 </Layout>

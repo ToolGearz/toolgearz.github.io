@@ -4,6 +4,8 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 ---
 
@@ -55,6 +57,7 @@ import '../../styles/global.css';
         <div id="regex-matches" class="space-y-2" aria-live="polite"></div>
       </div>
     </section>
+    <ToolGuide toolId="regex-tester" guide={toolGuides['regex-tester']} />
   </main>
   <Footer />
 </Layout>

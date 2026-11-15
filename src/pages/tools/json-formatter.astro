@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 
 export const prerender = true;
@@ -42,6 +44,7 @@ export const prerender = true;
         <textarea id="json-output" rows="9" spellcheck="false" readonly placeholder="Formatted or minified JSON will appear here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100"></textarea>
       </div>
     </section>
+    <ToolGuide toolId="json-formatter" guide={toolGuides['json-formatter']} />
   </main>
   <Footer />
 </Layout>

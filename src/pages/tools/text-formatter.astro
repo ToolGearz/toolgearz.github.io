@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 
 export const prerender = true;
@@ -62,6 +64,7 @@ export const prerender = true;
       </div>
       <p id="copy-status" class="m-0 min-h-6 text-sm text-slate-600" aria-live="polite"></p>
     </section>
+    <ToolGuide toolId="text-formatter" guide={toolGuides['text-formatter']} />
   </main>
   <Footer />
 </Layout>

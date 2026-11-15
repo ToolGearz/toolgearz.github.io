@@ -4,6 +4,8 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import ToolGuide from '../../components/ToolGuide.astro';
+import { toolGuides } from '../../data/tool-guides';
 import '../../styles/global.css';
 ---
 
@@ -43,6 +45,7 @@ import '../../styles/global.css';
         })}
       </div>
     </section>
+    <ToolGuide toolId="hash-generator" guide={toolGuides['hash-generator']} />
   </main>
   <Footer />
 </Layout>
