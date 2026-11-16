@@ -1,0 +1,405 @@
+---
+import type { ImageCompressorDefaults, ImageCompressorLabels } from '../../types/image-compressor';
+
+interface Props {
+  defaults: ImageCompressorDefaults;
+  labels: ImageCompressorLabels;
+}
+
+const { defaults, labels } = Astro.props;
+---
+
+<section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-labelledby="image-compressor-heading">
+  <h2 id="image-compressor-heading" class="text-xl font-extrabold text-slate-950">{labels.title}</h2>
+  <p class="m-0 leading-7 text-slate-600">{labels.description}</p>
+  <label id="image-drop-zone" for="image-files" class="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-7 text-center transition hover:border-teal-600 focus-within:border-teal-600 focus-within:ring-4 focus-within:ring-teal-100">
+    <span class="block text-lg font-extrabold text-slate-900">Drop images here or choose files</span>
+    <span class="mt-1 block text-sm text-slate-600">{labels.fileHelp}</span>
+    <input id="image-files" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple aria-describedby="image-input-help" />
+  </label>
+  <p id="image-input-help" class="m-0 text-xs text-slate-500">{labels.privacyNote}</p>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label for="image-quality" class="block text-sm font-bold text-slate-900">
+      Output quality: <output id="image-quality-value" for="image-quality">{defaults.quality}%</output>
+      <input id="image-quality" type="range" min="10" max="100" value={defaults.quality} class="mt-3 block w-full accent-teal-700" />
+    </label>
+    <label for="image-target-kb" class="block text-sm font-bold text-slate-900">
+      Target file size (KB, optional)
+      <input id="image-target-kb" type="number" min="1" max="51200" step="1" value={defaults.targetKB ?? ''} inputmode="numeric" placeholder="No target size" aria-describedby="image-target-help" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+      <span id="image-target-help" class="mt-1 block text-xs font-normal text-slate-500">{labels.targetHelp}</span>
+    </label>
+    <label for="image-format" class="block text-sm font-bold text-slate-900">
+      Output format
+      <select id="image-format" disabled={defaults.lockFormat} class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-70">
+        <option value="image/webp" selected={defaults.outputFormat === 'image/webp'}>WebP</option>
+        <option value="image/jpeg" selected={defaults.outputFormat === 'image/jpeg'}>JPEG</option>
+      </select>
+    </label>
+    <label for="image-max-width" class="block text-sm font-bold text-slate-900">
+      Maximum width (optional)
+      <input id="image-max-width" type="number" min="1" max="12000" step="1" inputmode="numeric" value={defaults.maxWidth ?? ''} placeholder="Keep original width" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+    </label>
+    <label for="image-max-height" class="block text-sm font-bold text-slate-900">
+      Maximum height (optional)
+      <input id="image-max-height" type="number" min="1" max="12000" step="1" inputmode="numeric" placeholder="Keep original height" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+    </label>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <button id="compress-images" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Compress images</button>
+    <button id="clear-images" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear files</button>
+    <button id="download-all-images" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Download all</button>
+  </div>
+  <p id="image-status" class="m-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Choose one or more images to get started.</p>
+  <div id="image-results" class="space-y-5" aria-live="polite"></div>
+</section>
+
+<script>
+  interface CompressedImage {
+    name: string;
+    originalSize: number;
+    originalUrl: string;
+    outputUrl: string;
+    outputSize: number;
+    width: number;
+    height: number;
+    originalWidth: number;
+    originalHeight: number;
+    outputType: string;
+    targetKB?: number;
+  }
+
+  const imageFileInput = document.querySelector<HTMLInputElement>('#image-files');
+  const imageQuality = document.querySelector<HTMLInputElement>('#image-quality');
+  const imageQualityValue = document.querySelector<HTMLOutputElement>('#image-quality-value');
+  const imageTargetKB = document.querySelector<HTMLInputElement>('#image-target-kb');
+  const imageFormat = document.querySelector<HTMLSelectElement>('#image-format');
+  const imageMaxWidth = document.querySelector<HTMLInputElement>('#image-max-width');
+  const imageMaxHeight = document.querySelector<HTMLInputElement>('#image-max-height');
+  const imageDropZone = document.querySelector<HTMLLabelElement>('#image-drop-zone');
+  const imageStatus = document.querySelector<HTMLParagraphElement>('#image-status');
+  const imageResults = document.querySelector<HTMLDivElement>('#image-results');
+  const downloadAllImagesButton = document.querySelector<HTMLButtonElement>('#download-all-images');
+  const selectedImages: File[] = [];
+  const compressedImages: CompressedImage[] = [];
+
+  function showImageStatus(message: string, isError = false): void {
+    if (!imageStatus) return;
+    imageStatus.textContent = message;
+    imageStatus.className = isError
+      ? 'm-0 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
+      : 'm-0 rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    const units = ['KB', 'MB', 'GB'];
+    let value = bytes / 1024;
+    let unit = 0;
+    while (value >= 1024 && unit < units.length - 1) {
+      value /= 1024;
+      unit += 1;
+    }
+    return `${value.toFixed(1)} ${units[unit]}`;
+  }
+
+  function releaseCompressedImages(): void {
+    for (const image of compressedImages) {
+      URL.revokeObjectURL(image.originalUrl);
+      URL.revokeObjectURL(image.outputUrl);
+    }
+    compressedImages.length = 0;
+  }
+
+  function appendImageFile(file: File): string | undefined {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      return `${file.name}: choose a JPG, PNG, or WebP image.`;
+    }
+    if (!file.size) {
+      return `${file.name}: the selected file is empty.`;
+    }
+    if (file.size > 40 * 1024 * 1024) {
+      return `${file.name}: file exceeds the 40 MB limit.`;
+    }
+    if (selectedImages.length >= 20) {
+      return 'Only 20 images can be processed at a time.';
+    }
+    selectedImages.push(file);
+    return undefined;
+  }
+
+  function updateImageSelection(files: FileList | File[]): void {
+    releaseCompressedImages();
+    selectedImages.length = 0;
+    const errors: string[] = [];
+    for (const file of Array.from(files)) {
+      const error = appendImageFile(file);
+      if (error) errors.push(error);
+    }
+    if (imageFileInput) imageFileInput.value = '';
+    if (imageResults) imageResults.replaceChildren();
+    if (downloadAllImagesButton) downloadAllImagesButton.disabled = true;
+    if (selectedImages.length) {
+      const rejectedFiles = errors.length ? ` ${errors.length} file${errors.length === 1 ? '' : 's'} rejected: ${errors.join(' ')}` : '';
+      showImageStatus(`${selectedImages.length} image${selectedImages.length === 1 ? '' : 's'} ready. Adjust settings and compress.${rejectedFiles}`, errors.length > 0);
+    } else {
+      showImageStatus(errors.join(' ') || 'No supported images selected.', true);
+    }
+  }
+
+  function readDimension(input: HTMLInputElement | null, label: string): number | undefined {
+    const raw = input?.value.trim() ?? '';
+    if (!raw) return undefined;
+    const value = Number(raw);
+    if (!Number.isInteger(value) || value < 1 || value > 12000) {
+      throw new Error(`${label} must be a whole number between 1 and 12,000.`);
+    }
+    return value;
+  }
+
+  function readTargetKB(): number | undefined {
+    const raw = imageTargetKB?.value.trim() ?? '';
+    if (!raw) return undefined;
+    const value = Number(raw);
+    if (!Number.isInteger(value) || value < 1 || value > 51200) {
+      throw new Error('Target size must be a whole number between 1 and 51,200 KB.');
+    }
+    return value;
+  }
+
+  function imageToCanvas(file: File, outputType: string, maxWidth?: number, maxHeight?: number): Promise<{ canvas: HTMLCanvasElement; originalWidth: number; originalHeight: number }> {
+    return new Promise((resolve, reject) => {
+      const sourceUrl = URL.createObjectURL(file);
+      const image = new Image();
+      image.onload = () => {
+        URL.revokeObjectURL(sourceUrl);
+        const originalWidth = image.naturalWidth;
+        const originalHeight = image.naturalHeight;
+        if (!originalWidth || !originalHeight || originalWidth * originalHeight > 40000000) {
+          reject(new Error('Image dimensions are empty or exceed the 40-megapixel safety limit.'));
+          return;
+        }
+        const scale = Math.min(1, maxWidth ? maxWidth / originalWidth : 1, maxHeight ? maxHeight / originalHeight : 1);
+        const width = Math.max(1, Math.round(originalWidth * scale));
+        const height = Math.max(1, Math.round(originalHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        if (!context) {
+          reject(new Error('Canvas is unavailable in this browser.'));
+          return;
+        }
+        if (outputType === 'image/jpeg') {
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, width, height);
+        }
+        context.drawImage(image, 0, 0, width, height);
+        resolve({ canvas, originalWidth, originalHeight });
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(sourceUrl);
+        reject(new Error('Browser could not decode this image.'));
+      };
+      image.src = sourceUrl;
+    });
+  }
+
+  function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error(`Browser could not encode this image as ${type === 'image/webp' ? 'WebP' : 'JPEG'}.`));
+          return;
+        }
+        if (blob.type !== type) {
+          reject(new Error(`This browser does not support ${type === 'image/webp' ? 'WebP' : 'JPEG'} encoding.`));
+          return;
+        }
+        resolve(blob);
+      }, type, quality);
+    });
+  }
+
+  async function encodeForTarget(canvas: HTMLCanvasElement, type: string, quality: number, targetKB?: number): Promise<{ blob: Blob; quality: number }> {
+    let bestBlob = await canvasToBlob(canvas, type, quality);
+    if (!targetKB || bestBlob.size <= targetKB * 1024) return { blob: bestBlob, quality };
+
+    let low = 0.1;
+    let high = quality;
+    let bestQuality = quality;
+    for (let attempt = 0; attempt < 7; attempt += 1) {
+      const candidateQuality = (low + high) / 2;
+      const candidate = await canvasToBlob(canvas, type, candidateQuality);
+      if (candidate.size < bestBlob.size) {
+        bestBlob = candidate;
+        bestQuality = candidateQuality;
+      }
+      if (candidate.size <= targetKB * 1024) {
+        bestBlob = candidate;
+        bestQuality = candidateQuality;
+        low = candidateQuality;
+      } else {
+        high = candidateQuality;
+      }
+    }
+    return { blob: bestBlob, quality: bestQuality };
+  }
+
+  function createImageResultCard(result: CompressedImage): HTMLElement {
+    const card = document.createElement('article');
+    card.className = 'space-y-4 rounded-2xl border border-slate-200 bg-white p-4';
+    const heading = document.createElement('h3');
+    heading.className = 'm-0 break-all text-base font-extrabold text-slate-950';
+    heading.textContent = result.name;
+    card.append(heading);
+
+    const previews = document.createElement('div');
+    previews.className = 'grid gap-4 sm:grid-cols-2';
+    for (const [label, url, dimensions] of [
+      ['Original', result.originalUrl, `${result.originalWidth} × ${result.originalHeight}`],
+      ['Compressed', result.outputUrl, `${result.width} × ${result.height}`],
+    ]) {
+      const figure = document.createElement('figure');
+      figure.className = 'm-0 space-y-2';
+      const image = document.createElement('img');
+      image.src = url;
+      image.alt = `${label} preview of ${result.name}`;
+      image.className = 'max-h-64 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain';
+      const caption = document.createElement('figcaption');
+      caption.className = 'text-sm font-semibold text-slate-700';
+      caption.textContent = `${label}: ${dimensions}`;
+      figure.append(image, caption);
+      previews.append(figure);
+    }
+    card.append(previews);
+
+    const saved = result.originalSize ? ((result.originalSize - result.outputSize) / result.originalSize) * 100 : 0;
+    const stats = document.createElement('p');
+    stats.className = 'm-0 text-sm text-slate-700';
+    stats.textContent = `Before: ${formatBytes(result.originalSize)} · After: ${formatBytes(result.outputSize)} · ${saved >= 0 ? `${saved.toFixed(1)}% saved` : `${Math.abs(saved).toFixed(1)}% larger`}`;
+    card.append(stats);
+    if (saved < 0) {
+      const warning = document.createElement('p');
+      warning.className = 'm-0 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950';
+      warning.setAttribute('role', 'status');
+      warning.textContent = 'Warning: compressed output is larger than the original. Try a different format or keep the original.';
+      card.append(warning);
+    }
+    if (result.targetKB && result.outputSize > result.targetKB * 1024) {
+      const warning = document.createElement('p');
+      warning.className = 'm-0 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950';
+      warning.setAttribute('role', 'status');
+      warning.textContent = `Target of ${result.targetKB} KB could not be reached at this size and format. Try a smaller maximum width or another format.`;
+      card.append(warning);
+    }
+
+    const download = document.createElement('a');
+    download.href = result.outputUrl;
+    download.download = `${result.name.replace(/\.[^.]+$/, '')}-compressed.${result.outputType === 'image/webp' ? 'webp' : 'jpg'}`;
+    download.className = 'inline-flex min-h-11 items-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700';
+    download.textContent = 'Download compressed image';
+    card.append(download);
+    return card;
+  }
+
+  async function compressSelectedImages(): Promise<void> {
+    if (!selectedImages.length) {
+      showImageStatus('Choose at least one supported image before compressing.', true);
+      return;
+    }
+    try {
+      const maxWidth = readDimension(imageMaxWidth, 'Maximum width');
+      const maxHeight = readDimension(imageMaxHeight, 'Maximum height');
+      const targetKB = readTargetKB();
+      if (!imageResults || !imageFormat || !imageQuality) return;
+      releaseCompressedImages();
+      imageResults.replaceChildren();
+      const quality = Number(imageQuality.value) / 100;
+      let completed = 0;
+      for (const file of selectedImages) {
+        showImageStatus(`Compressing ${completed + 1} of ${selectedImages.length}: ${file.name}`);
+        try {
+          const { canvas, originalWidth, originalHeight } = await imageToCanvas(file, imageFormat.value, maxWidth, maxHeight);
+          const { blob } = await encodeForTarget(canvas, imageFormat.value, quality, targetKB);
+          const result: CompressedImage = {
+            name: file.name,
+            originalSize: file.size,
+            originalUrl: URL.createObjectURL(file),
+            outputUrl: URL.createObjectURL(blob),
+            outputSize: blob.size,
+            width: canvas.width,
+            height: canvas.height,
+            originalWidth,
+            originalHeight,
+            outputType: blob.type,
+            targetKB,
+          };
+          compressedImages.push(result);
+          imageResults.append(createImageResultCard(result));
+          canvas.width = 0;
+          canvas.height = 0;
+        } catch (error) {
+          const message = document.createElement('p');
+          message.className = 'm-0 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800';
+          message.setAttribute('role', 'status');
+          message.textContent = `${file.name}: ${error instanceof Error ? error.message : 'Compression failed.'}`;
+          imageResults.append(message);
+        }
+        completed += 1;
+      }
+      if (downloadAllImagesButton) downloadAllImagesButton.disabled = compressedImages.length === 0;
+      showImageStatus(`${compressedImages.length} of ${selectedImages.length} image${selectedImages.length === 1 ? '' : 's'} compressed locally.`);
+    } catch (error) {
+      showImageStatus(error instanceof Error ? error.message : 'Unable to compress the selected images.', true);
+    }
+  }
+
+  imageFileInput?.addEventListener('change', () => {
+    if (imageFileInput.files) updateImageSelection(imageFileInput.files);
+  });
+  imageQuality?.addEventListener('input', () => {
+    if (imageQualityValue && imageQuality) imageQualityValue.textContent = `${imageQuality.value}%`;
+  });
+  imageDropZone?.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    imageDropZone.classList.add('border-teal-700', 'bg-teal-50');
+  });
+  imageDropZone?.addEventListener('dragleave', () => {
+    imageDropZone.classList.remove('border-teal-700', 'bg-teal-50');
+  });
+  imageDropZone?.addEventListener('drop', (event) => {
+    event.preventDefault();
+    imageDropZone.classList.remove('border-teal-700', 'bg-teal-50');
+    const files = (event as DragEvent).dataTransfer?.files;
+    if (files) updateImageSelection(files);
+  });
+  document.querySelector<HTMLButtonElement>('#compress-images')?.addEventListener('click', () => {
+    void compressSelectedImages();
+  });
+  document.querySelector<HTMLButtonElement>('#clear-images')?.addEventListener('click', () => {
+    selectedImages.length = 0;
+    releaseCompressedImages();
+    imageResults?.replaceChildren();
+    if (downloadAllImagesButton) downloadAllImagesButton.disabled = true;
+    showImageStatus('Cleared. Choose one or more images to get started.');
+  });
+  downloadAllImagesButton?.addEventListener('click', async () => {
+    if (!compressedImages.length) {
+      showImageStatus('Compress images before downloading results.', true);
+      return;
+    }
+    for (const [index, result] of compressedImages.entries()) {
+      const link = document.createElement('a');
+      link.href = result.outputUrl;
+      link.download = `${result.name.replace(/\.[^.]+$/, '')}-compressed.${result.outputType === 'image/webp' ? 'webp' : 'jpg'}`;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      if (index < compressedImages.length - 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 250));
+      }
+    }
+    showImageStatus(`Started ${compressedImages.length} local downloads. Allow multiple downloads if your browser asks.`);
+  });
+  window.addEventListener('beforeunload', releaseCompressedImages);
+</script>
