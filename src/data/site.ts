@@ -1,13 +1,13 @@
 export const siteConfig = {
-  siteName: 'Jutt AI',
-  shortName: 'Jutt',
+  siteName: 'ToolGearz',
+  shortName: 'ToolGearz',
   domain: 'https://toolgearz.github.io',
-  email: 'juttwebsolutions@gmail.com',
+  email: 'zaidjutt368@gmail.com',
   phone: '+923006699738',
   whatsapp: '923006699738',
   location: 'Remote / Worldwide',
   baseDescription:
-    'Free online AI tools and browser-based utilities for writing, text conversion, and developer tasks.',
+    'Free online tools for text conversion, coding, CSS, image compression, and everyday productivity.',
 };
 
 export const navItems = [

@@ -9,15 +9,15 @@ const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0
   <div class="footer-shell">
     <div class="footer-column footer-brand">
       <a class="brand" href="/">
-        <span class="brand-mark">J</span>
+        <span class="brand-mark">T</span>
         <div>
           <strong>{siteConfig.siteName}</strong>
           <p>{siteConfig.baseDescription}</p>
         </div>
       </a>
       <div class="social-links" aria-label="Social links">
-        <a href={`mailto:${siteConfig.email}`} aria-label="Email Jutt AI">Email</a>
-        <a href="/contact" aria-label="Contact Jutt AI">Contact</a>
+        <a href={`mailto:${siteConfig.email}`} aria-label="Email ToolGearz">Email</a>
+        <a href="/contact" aria-label="Contact ToolGearz">Contact</a>
       </div>
     </div>
 
@@ -36,13 +36,14 @@ const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0
     </div>
 
     <div class="footer-column footer-contact">
-      <h3>Jutt AI Tools</h3>
+      <h3>ToolGearz</h3>
       <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
       <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
       <a href={`sms:${siteConfig.phone}`}>Text us</a>
       <a href={`https://wa.me/${siteConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
     </div>
   </div>
+  <p class="copyright">© {new Date().getFullYear()} ToolGearz. All rights reserved.</p>
 </footer>
 
 <style>
@@ -62,6 +63,16 @@ const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0
     display: grid;
     grid-template-columns: 1.35fr repeat(2, minmax(0, 1fr)) 1.1fr 1.1fr;
     gap: 2rem;
+  }
+
+  .copyright {
+    width: min(1180px, calc(100% - 1.5rem));
+    margin: 2rem auto 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    color: #cbd5e1;
+    font-size: 0.875rem;
+    text-align: center;
   }
 
   .footer-column {

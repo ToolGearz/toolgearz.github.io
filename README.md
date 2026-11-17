@@ -1,6 +1,6 @@
-# Jutt AI
+# ToolGearz
 
-Jutt AI is a focused directory of free AI generators and browser-based utilities. The homepage and `/tools` link directly to each tool page, which is generated from the registry at [`src/data/tools.ts`](./src/data/tools.ts). The site uses Tailwind CSS and Astro static output, deployed to GitHub Pages.
+ToolGearz is a focused directory of free AI generators and browser-based utilities. The homepage and `/tools` link directly to each tool page, which is generated from the registry at [`src/data/tools.ts`](./src/data/tools.ts). The site uses Tailwind CSS and Astro static output, deployed to GitHub Pages.
 
 ## Local development
 

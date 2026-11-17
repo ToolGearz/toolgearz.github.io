@@ -1,16 +1,6 @@
 import { defineConfig } from 'astro/config';
-import { copyFile } from 'node:fs/promises';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-
-const sitemapAlias = {
-  name: 'sitemap-root-alias',
-  hooks: {
-    'astro:build:done': async ({ dir }) => {
-      await copyFile(new URL('sitemap-index.xml', dir), new URL('sitemap.xml', dir));
-    },
-  },
-};
 
 export default defineConfig({
   output: 'static',
@@ -26,7 +16,6 @@ export default defineConfig({
         return !pathname.startsWith('/demos') && pathname !== '/portfolio';
       },
     }),
-    sitemapAlias,
   ],
   vite: {
     plugins: [tailwindcss()],
