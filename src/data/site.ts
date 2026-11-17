@@ -1,7 +1,7 @@
 export const siteConfig = {
   siteName: 'Jutt AI',
   shortName: 'Jutt',
-  domain: 'https://juttaiblog.online',
+  domain: 'https://toolgearz.github.io',
   email: 'juttwebsolutions@gmail.com',
   phone: '+923006699738',
   whatsapp: '923006699738',

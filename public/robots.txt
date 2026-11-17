@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow:
 
-Sitemap: https://juttaiblog.online/sitemap.xml
+Sitemap: https://toolgearz.github.io/sitemap.xml

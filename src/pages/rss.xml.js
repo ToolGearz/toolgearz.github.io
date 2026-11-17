@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 import { getBlogEntrySlug, getBlogPostPath } from '../utils/blog';
 
 export async function GET() {
-  const baseUrl = 'https://juttaiblog.online';
+  const baseUrl = 'https://toolgearz.github.io';
   const posts = (await getCollection('blog'))
     .map((entry) => {
       const slug = getBlogEntrySlug(entry);

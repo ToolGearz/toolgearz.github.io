@@ -16,7 +16,7 @@ export function getStaticPaths() {
 }
 
 const { variant } = Astro.props;
-const pageUrl = `https://juttaiblog.online/tools/image-compressor/${variant.slug}`;
+const pageUrl = `https://toolgearz.github.io/tools/image-compressor/${variant.slug}`;
 const faqs = variant.faqs;
 const siblings = variant.siblings.map((slug) => {
   const sibling = imageCompressorVariants.find((entry) => entry.slug === slug);

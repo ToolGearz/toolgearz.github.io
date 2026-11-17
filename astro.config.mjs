@@ -1,10 +1,7 @@
 import { defineConfig } from 'astro/config';
 import { copyFile } from 'node:fs/promises';
-import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-
-const site = 'https://juttaiblog.online';
 
 const sitemapAlias = {
   name: 'sitemap-root-alias',
@@ -16,9 +13,8 @@ const sitemapAlias = {
 };
 
 export default defineConfig({
-  output: 'server',
-  adapter: cloudflare(),
-  site,
+  output: 'static',
+  site: 'https://toolgearz.github.io',
   trailingSlash: 'never',
   build: {
     format: 'directory',
