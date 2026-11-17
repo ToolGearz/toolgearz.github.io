@@ -58,6 +58,7 @@ const isActive = (href: string) => {
           </div>
         </details>
       </div>
+      <a class="all-tools-nav-link" href="/tools">All tools</a>
       <a class="quote-button" href="/#tools">Explore Tools</a>
     </nav>
   </div>
@@ -121,16 +122,16 @@ const isActive = (href: string) => {
     width: 2.6rem;
     height: 2.6rem;
     border-radius: 15px;
-    background: linear-gradient(145deg, #0f766e, #0f5f59);
+    background: linear-gradient(145deg, #4f46e5, #4338ca);
     color: white;
     font-weight: 800;
-    box-shadow: 0 8px 18px rgba(15, 118, 110, 0.2);
+    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.2);
     transition: transform 180ms ease, box-shadow 180ms ease;
   }
 
   .brand:hover .brand-mark {
     transform: translateY(-1px);
-    box-shadow: 0 11px 22px rgba(15, 118, 110, 0.25);
+    box-shadow: 0 11px 22px rgba(79, 70, 229, 0.25);
   }
 
   .brand-text {
@@ -197,8 +198,19 @@ const isActive = (href: string) => {
   }
 
   .tools-menu summary::after {
-    content: '⌄';
-    margin-left: 0.4rem;
+    display: inline-block;
+    width: 0.42rem;
+    height: 0.42rem;
+    margin-left: 0.55rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    content: '';
+    transform: translateY(-0.15rem) rotate(45deg);
+    transition: transform 160ms ease;
+  }
+
+  .tools-menu[open] summary::after {
+    transform: translateY(0.08rem) rotate(225deg);
   }
 
   .tools-menu[open] summary,
@@ -251,9 +263,9 @@ const isActive = (href: string) => {
     justify-content: space-between;
     gap: 1rem;
     padding: 0.75rem;
-    border: 1px solid rgba(15, 118, 110, 0.14);
-    background: #f0fdfa;
-    color: #115e59;
+    border: 1px solid rgba(79, 70, 229, 0.14);
+    background: #eef2ff;
+    color: #4338ca;
     font-weight: 800;
   }
 
@@ -263,8 +275,8 @@ const isActive = (href: string) => {
     min-height: 1.65rem;
     place-items: center;
     border-radius: 999px;
-    background: #ccfbf1;
-    color: #115e59;
+    background: #e0e7ff;
+    color: #4338ca;
     font-size: 0.72rem;
   }
 
@@ -292,6 +304,29 @@ const isActive = (href: string) => {
     color: white;
     box-shadow: 0 7px 16px rgba(15, 23, 42, 0.12);
     transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+  }
+
+  .all-tools-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0.65rem 0.95rem;
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.9rem;
+    font-weight: 750;
+    white-space: nowrap;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+
+  .all-tools-nav-link:hover,
+  .all-tools-nav-link:focus-visible {
+    border-color: rgba(99, 102, 241, 0.32);
+    background: #e0e7ff;
+    color: #3730a3;
   }
 
   .quote-button:hover {
@@ -378,6 +413,7 @@ const isActive = (href: string) => {
     }
 
     .nav-links a,
+    .all-tools-nav-link,
     .quote-button {
       width: 100%;
       justify-content: center;

@@ -56,13 +56,13 @@ if (!guide) {
   <main class="mx-auto w-[min(900px,calc(100%-2rem))] pb-12">
     <>
         <div class="pb-8 pt-12 sm:pt-16">
-          <a href="/" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
+          <a href="/" class="text-sm font-bold text-indigo-600 hover:text-indigo-800">← All tools</a>
           <div class="mt-7 flex items-start gap-4">
-            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-teal-100 px-2 text-2xl font-bold text-teal-900">
+            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-indigo-100 bg-indigo-50 px-2 text-2xl font-bold text-indigo-700">
               {tool.icon ?? (tool.type === 'ai' ? '✦' : '↔')}
             </span>
             <div>
-              <p class="mb-2 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">
+              <p class="mb-2 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-600">
                 {tool.category} · {tool.type === 'ai' ? 'AI tool' : 'Runs in your browser'}
               </p>
               <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1>
@@ -71,7 +71,21 @@ if (!guide) {
           </div>
         </div>
 
-        <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+        <section class="workspace-card overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
+          <header class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-8">
+            <div class="flex items-center gap-3">
+              <span class="grid h-9 w-9 place-items-center rounded-xl bg-indigo-100 text-indigo-700" aria-hidden="true">✦</span>
+              <div>
+                <h2 class="m-0 text-sm font-extrabold text-slate-900">Tool workspace</h2>
+                <p class="m-0 text-xs text-slate-500">Your settings and results stay in this session.</p>
+              </div>
+            </div>
+            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600">
+              <span class:list={['h-2 w-2 rounded-full', tool.type === 'client' ? 'bg-emerald-500' : 'bg-amber-500']} aria-hidden="true"></span>
+              {tool.type === 'client' ? 'Client-Side Utility' : 'AI generation unavailable'}
+            </span>
+          </header>
+          <div class="p-5 sm:p-8">
           <form id="tool-form" data-tool-id={tool.id} data-tool-type={tool.type} data-client-action={tool.type === 'client' ? tool.clientAction : ''} class="space-y-4">
             {tool.type === 'ai' ? (
               <>
@@ -84,31 +98,31 @@ if (!guide) {
                   required
                   disabled={tool.type === 'ai'}
                   placeholder={tool.placeholder ?? 'Enter the details for your request...'}
-                  class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"
+                  class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100"
                 ></textarea>
               </>
             ) : tool.clientAction === 'password-pin-generator' ? (
               <div class="space-y-5">
                 <label class="block text-sm font-bold text-slate-900">
                   Generate
-                  <select id="password-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-xs">
+                  <select id="password-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-xs">
                     <option value="password">Password</option>
                     <option value="pin">Numeric PIN</option>
                   </select>
                 </label>
                 <label class="block text-sm font-bold text-slate-900 sm:max-w-xs">
                   Length
-                  <input id="password-length" type="number" min="4" max="64" value="16" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+                  <input id="password-length" type="number" min="4" max="64" value="16" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
                 </label>
                 <div id="password-options" class="flex flex-wrap gap-x-6 gap-y-3">
                   <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input id="password-uppercase" type="checkbox" checked class="h-4 w-4 accent-teal-800" /> Uppercase letters
+                    <input id="password-uppercase" type="checkbox" checked class="h-4 w-4 accent-indigo-800" /> Uppercase letters
                   </label>
                   <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input id="password-numbers" type="checkbox" checked class="h-4 w-4 accent-teal-800" /> Numbers
+                    <input id="password-numbers" type="checkbox" checked class="h-4 w-4 accent-indigo-800" /> Numbers
                   </label>
                   <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input id="password-symbols" type="checkbox" class="h-4 w-4 accent-teal-800" /> Symbols
+                    <input id="password-symbols" type="checkbox" class="h-4 w-4 accent-indigo-800" /> Symbols
                   </label>
                 </div>
                 <p class="m-0 text-xs text-slate-500">Passwords and PINs are generated using your browser’s cryptographic random number generator.</p>
@@ -117,37 +131,37 @@ if (!guide) {
               <div class="grid gap-4 sm:grid-cols-2">
                 <label class="block text-sm font-bold text-slate-900">
                   Generate
-                  <select id="lorem-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+                  <select id="lorem-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
                     <option value="paragraphs">Paragraphs</option>
                     <option value="words">Words</option>
                   </select>
                 </label>
                 <label class="block text-sm font-bold text-slate-900">
                   <span id="lorem-count-label">Number of paragraphs</span>
-                  <input id="lorem-count" type="number" min="1" max="10" value="3" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+                  <input id="lorem-count" type="number" min="1" max="10" value="3" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
                 </label>
               </div>
             ) : tool.clientAction === 'epoch-date-converter' ? (
               <div class="space-y-4">
                 <label class="block text-sm font-bold text-slate-900">
                   Conversion
-                  <select id="epoch-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-sm">
+                  <select id="epoch-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-sm">
                     <option value="date-to-epoch">Date to Unix timestamp</option>
                     <option value="epoch-to-date">Unix timestamp to date</option>
                   </select>
                 </label>
                 <div id="epoch-date-fields">
                   <label for="epoch-date" class="block text-sm font-bold text-slate-900">Date and time</label>
-                  <input id="epoch-date" type="datetime-local" step="1" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-sm" />
+                  <input id="epoch-date" type="datetime-local" step="1" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-sm" />
                 </div>
                 <div id="epoch-value-fields" class="hidden grid gap-4 sm:grid-cols-2">
                   <label class="block text-sm font-bold text-slate-900">
                     Timestamp
-                    <input id="epoch-value" type="number" step="any" placeholder="e.g. 1735689600" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+                    <input id="epoch-value" type="number" step="any" placeholder="e.g. 1735689600" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
                   </label>
                   <label class="block text-sm font-bold text-slate-900">
                     Unit
-                    <select id="epoch-unit" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+                    <select id="epoch-unit" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
                       <option value="seconds">Seconds</option>
                       <option value="milliseconds">Milliseconds</option>
                     </select>
@@ -158,11 +172,11 @@ if (!guide) {
               <div class="grid gap-4 sm:grid-cols-3">
                 <label class="block text-sm font-bold text-slate-900">
                   Value
-                  <input id="unit-value" type="number" step="any" value="1" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+                  <input id="unit-value" type="number" step="any" value="1" class="mt-2 block w-full rounded-xl border border-slate-300 px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
                 </label>
                 <label class="block text-sm font-bold text-slate-900">
                   From
-                  <select id="unit-from" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+                  <select id="unit-from" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
                     <option value="meter">Meters</option>
                     <option value="kilometer">Kilometers</option>
                     <option value="mile">Miles</option>
@@ -173,7 +187,7 @@ if (!guide) {
                 </label>
                 <label class="block text-sm font-bold text-slate-900">
                   To
-                  <select id="unit-to" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+                  <select id="unit-to" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
                     <option value="kilometer">Kilometers</option>
                     <option value="meter">Meters</option>
                     <option value="mile">Miles</option>
@@ -195,12 +209,12 @@ if (!guide) {
                   maxlength="100000"
                   required
                   placeholder={tool.placeholder ?? 'Enter text...'}
-                  class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"
+                  class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100"
                 ></textarea>
                 {tool.clientAction === 'text-case-converter' && (
                   <label class="block text-sm font-bold text-slate-900">
                     Convert to
-                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-xs">
+                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-xs">
                       <option value="uppercase">UPPERCASE</option>
                       <option value="lowercase">lowercase</option>
                       <option value="title">Title Case</option>
@@ -211,7 +225,7 @@ if (!guide) {
                 {tool.clientAction === 'base64' && (
                   <label class="block text-sm font-bold text-slate-900">
                     Action
-                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-xs">
+                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-xs">
                       <option value="encode">Encode to Base64</option>
                       <option value="decode">Decode from Base64</option>
                     </select>
@@ -220,7 +234,7 @@ if (!guide) {
                 {tool.clientAction === 'text-hash-generator' && (
                   <label class="block text-sm font-bold text-slate-900">
                     Hash algorithm
-                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 sm:max-w-xs">
+                    <select id="client-mode" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 sm:max-w-xs">
                       <option value="SHA-256">SHA-256</option>
                       <option value="SHA-1">SHA-1</option>
                       <option value="MD5">MD5 (legacy, not secure)</option>
@@ -235,7 +249,7 @@ if (!guide) {
                 id="run-tool"
                 type="submit"
                 disabled={tool.type === 'ai'}
-                class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-teal-800 px-6 py-3 font-bold text-white transition hover:bg-teal-950 disabled:cursor-not-allowed disabled:opacity-60"
+                class="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span>{tool.type === 'ai' ? 'Generate' : tool.clientAction === 'word-counter' ? 'Count text' : tool.clientAction === 'unit-converter' || tool.clientAction === 'epoch-date-converter' ? 'Convert' : tool.clientAction === 'password-pin-generator' ? 'Generate securely' : tool.clientAction === 'lorem-ipsum-generator' ? 'Generate text' : tool.clientAction === 'slug-generator' ? 'Create slug' : tool.clientAction === 'text-hash-generator' ? 'Generate hash' : 'Run tool'}</span>
               </button>
@@ -249,8 +263,8 @@ if (!guide) {
               <button
                 id="copy-button"
                 type="button"
-                class="rounded-full border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800"
-              >Copy to clipboard</button>
+                class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 active:scale-95"
+                >Copy result</button>
             </div>
             <div
               id="tool-output"
@@ -260,6 +274,7 @@ if (!guide) {
             ></div>
           </section>
 
+          </div>
         </section>
 
         {tool.type === 'ai' && (
@@ -588,7 +603,7 @@ if (!guide) {
         await navigator.clipboard.writeText(output.textContent ?? '');
         copyButton.textContent = 'Copied!';
         window.setTimeout(() => {
-          copyButton.textContent = 'Copy to clipboard';
+          copyButton.textContent = 'Copy result';
         }, 1800);
       } catch {
         status.textContent = 'Could not copy automatically. Select the result text and copy it manually.';

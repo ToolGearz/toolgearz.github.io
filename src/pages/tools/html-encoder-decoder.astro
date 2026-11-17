@@ -55,8 +55,8 @@ const faqSchema = {
   <Navbar />
   <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <a href="/tools" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Design &amp; developer tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">HTML Entity Encoder &amp; Decoder</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">Convert special characters to HTML entities or decode entities back to readable text. Your content stays on this device.</p>
     </header>
@@ -64,19 +64,19 @@ const faqSchema = {
     <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="HTML entity encoder and decoder">
       <div>
         <label for="html-input" class="mb-2 block text-sm font-bold text-slate-900">Text or HTML entities</label>
-        <textarea id="html-input" rows="7" maxlength="100000" spellcheck="false" placeholder="Enter text such as &lt;h1&gt;Tom &amp; Ada&lt;/h1&gt;..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"></textarea>
+        <textarea id="html-input" rows="7" maxlength="100000" spellcheck="false" placeholder="Enter text such as &lt;h1&gt;Tom &amp; Ada&lt;/h1&gt;..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100"></textarea>
         <p class="mt-2 text-xs text-slate-500">Maximum 100,000 characters. Encoding is for HTML text content, not a substitute for application-specific sanitization.</p>
       </div>
       <div class="flex flex-wrap gap-2">
-        <button id="encode-html" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Encode entities</button>
-        <button id="decode-html" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Decode entities</button>
-        <button id="clear-html" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear</button>
+        <button id="encode-html" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-800">Encode entities</button>
+        <button id="decode-html" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Decode entities</button>
+        <button id="clear-html" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Clear</button>
       </div>
       <div id="html-status" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Enter text and choose an action.</div>
       <div>
         <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
           <label for="html-output" class="text-sm font-bold text-slate-900">Result</label>
-          <button id="copy-html" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy result</button>
+          <button id="copy-html" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Copy result</button>
         </div>
         <textarea id="html-output" rows="7" maxlength="100000" spellcheck="false" readonly placeholder="The result will appear here..." class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none"></textarea>
       </div>
@@ -113,9 +113,9 @@ const faqSchema = {
     <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="html-related-heading">
       <h2 id="html-related-heading" class="text-xl font-extrabold text-slate-950">Related developer tools</h2>
       <div class="grid gap-3 sm:grid-cols-3">
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/url-encoder-decoder">URL Encoder / Decoder</a>
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/json-to-ts">JSON to TypeScript</a>
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/url-encoder-decoder">URL Encoder / Decoder</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/json-to-ts">JSON to TypeScript</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
       </div>
     </section>
     <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
@@ -134,7 +134,7 @@ const faqSchema = {
     htmlStatus.textContent = message;
     htmlStatus.className = isError
       ? 'rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
-      : 'rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+      : 'rounded-2xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-900';
   }
 
   function transformHtml(mode: 'encode' | 'decode'): void {

@@ -55,8 +55,8 @@ const faqSchema = {
   <Navbar />
   <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <a href="/tools" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Design &amp; developer tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">CSS Gradient Generator</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">Build a linear or radial gradient with live color-stop controls, preview it, and copy the CSS directly into your project.</p>
     </header>
@@ -65,14 +65,14 @@ const faqSchema = {
       <div class="grid gap-4 sm:grid-cols-2">
         <label for="gradient-type" class="block text-sm font-bold text-slate-900">
           Gradient type
-          <select id="gradient-type" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+          <select id="gradient-type" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
             <option value="linear">Linear</option>
             <option value="radial">Radial</option>
           </select>
         </label>
         <label for="gradient-count" class="block text-sm font-bold text-slate-900">
           Number of color stops
-          <select id="gradient-count" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100">
+          <select id="gradient-count" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100">
             <option value="2">2 stops</option>
             <option value="3" selected>3 stops</option>
             <option value="4">4 stops</option>
@@ -82,14 +82,14 @@ const faqSchema = {
       </div>
       <label id="gradient-angle-control" for="gradient-angle" class="block text-sm font-bold text-slate-900">
         Linear angle: <output id="gradient-angle-value" for="gradient-angle">135°</output>
-        <input id="gradient-angle" type="range" min="0" max="360" value="135" class="mt-3 block w-full accent-teal-700" />
+        <input id="gradient-angle" type="range" min="0" max="360" value="135" class="mt-3 block w-full accent-indigo-700" />
       </label>
       <fieldset class="space-y-3">
         <legend class="mb-3 text-sm font-extrabold text-slate-900">Color stops and positions</legend>
         {[
-          { index: 1, color: '#0f766e', position: 0 },
+          { index: 1, color: '#4f46e5', position: 0 },
           { index: 2, color: '#14b8a6', position: 50 },
-          { index: 3, color: '#ccfbf1', position: 100 },
+          { index: 3, color: '#e0e7ff', position: 100 },
           { index: 4, color: '#0f172a', position: 75 },
           { index: 5, color: '#f97316', position: 100 },
         ].map(({ index, color, position }) => (
@@ -100,17 +100,17 @@ const faqSchema = {
             </label>
             <label for={`gradient-position-${index}`} class="block text-sm font-bold text-slate-900">
               Position (%)
-              <input id={`gradient-position-${index}`} data-gradient-position type="number" min="0" max="100" step="1" value={position} inputmode="numeric" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+              <input id={`gradient-position-${index}`} data-gradient-position type="number" min="0" max="100" step="1" value={position} inputmode="numeric" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
             </label>
             <span class="hidden rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600 sm:inline">Stop {index}</span>
           </div>
         ))}
       </fieldset>
       <div class="flex flex-wrap gap-2">
-        <button type="button" data-gradient-preset="sunset" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Sunset preset</button>
-        <button type="button" data-gradient-preset="ocean" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Ocean preset</button>
-        <button type="button" data-gradient-preset="forest" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Forest preset</button>
-        <button id="randomize-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Randomize</button>
+        <button type="button" data-gradient-preset="sunset" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Sunset preset</button>
+        <button type="button" data-gradient-preset="ocean" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Ocean preset</button>
+        <button type="button" data-gradient-preset="forest" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Forest preset</button>
+        <button id="randomize-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Randomize</button>
       </div>
       <div id="gradient-preview" class="grid min-h-56 place-items-center rounded-2xl border border-slate-200 p-6 sm:min-h-72" role="img" aria-label="Live preview of the generated CSS gradient">
         <span class="rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-slate-900 shadow-sm">Gradient preview</span>
@@ -118,7 +118,7 @@ const faqSchema = {
       <div>
         <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
           <label for="gradient-output" class="text-sm font-bold text-slate-900">CSS output</label>
-          <button id="copy-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy CSS</button>
+          <button id="copy-gradient" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Copy CSS</button>
         </div>
         <textarea id="gradient-output" rows="3" readonly spellcheck="false" aria-label="Generated CSS gradient declaration" class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none"></textarea>
         <p id="gradient-status" class="mt-2 text-sm text-slate-600" role="status" aria-live="polite"></p>
@@ -156,9 +156,9 @@ const faqSchema = {
     <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="gradient-related-heading">
       <h2 id="gradient-related-heading" class="text-xl font-extrabold text-slate-950">Related design tools</h2>
       <div class="grid gap-3 sm:grid-cols-3">
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/color-converter">Color Converter</a>
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
-        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-teal-800 hover:border-teal-400" href="/tools/css-minifier">CSS Minifier</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/color-converter">Color Converter</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
+        <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/css-minifier">CSS Minifier</a>
       </div>
     </section>
     <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />

@@ -17,8 +17,8 @@ import '../../styles/global.css';
   <Navbar />
   <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <a href="/tools" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Design &amp; developer tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">CSS Box Shadow Generator</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">Tune a shadow with live controls and preview the result before copying the CSS.</p>
     </header>
@@ -28,19 +28,19 @@ import '../../styles/global.css';
         <div class="grid gap-4 sm:grid-cols-2">
           <label class="block text-sm font-bold text-slate-900">
             Horizontal offset <output id="horizontal-value" for="horizontal">8px</output>
-            <input id="horizontal" type="range" min="-50" max="50" value="8" class="mt-3 block w-full accent-teal-700" />
+            <input id="horizontal" type="range" min="-50" max="50" value="8" class="mt-3 block w-full accent-indigo-700" />
           </label>
           <label class="block text-sm font-bold text-slate-900">
             Vertical offset <output id="vertical-value" for="vertical">8px</output>
-            <input id="vertical" type="range" min="-50" max="50" value="8" class="mt-3 block w-full accent-teal-700" />
+            <input id="vertical" type="range" min="-50" max="50" value="8" class="mt-3 block w-full accent-indigo-700" />
           </label>
           <label class="block text-sm font-bold text-slate-900">
             Blur <output id="blur-value" for="blur">16px</output>
-            <input id="blur" type="range" min="0" max="100" value="16" class="mt-3 block w-full accent-teal-700" />
+            <input id="blur" type="range" min="0" max="100" value="16" class="mt-3 block w-full accent-indigo-700" />
           </label>
           <label class="block text-sm font-bold text-slate-900">
             Spread <output id="spread-value" for="spread">0px</output>
-            <input id="spread" type="range" min="-50" max="50" value="0" class="mt-3 block w-full accent-teal-700" />
+            <input id="spread" type="range" min="-50" max="50" value="0" class="mt-3 block w-full accent-indigo-700" />
           </label>
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -50,7 +50,7 @@ import '../../styles/global.css';
           </label>
           <label class="block text-sm font-bold text-slate-900">
             Opacity <output id="opacity-value" for="opacity">25%</output>
-            <input id="opacity" type="range" min="0" max="100" value="25" class="mt-3 block w-full accent-teal-700" />
+            <input id="opacity" type="range" min="0" max="100" value="25" class="mt-3 block w-full accent-indigo-700" />
           </label>
         </div>
       </div>
@@ -60,7 +60,7 @@ import '../../styles/global.css';
       <div class="space-y-2 lg:col-span-2">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <label for="shadow-output" class="text-sm font-bold text-slate-900">CSS output</label>
-          <button id="copy-shadow" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Copy to Clipboard</button>
+          <button id="copy-shadow" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Copy to Clipboard</button>
         </div>
         <textarea id="shadow-output" rows="2" readonly spellcheck="false" class="block w-full resize-y rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 font-mono text-sm leading-6 text-slate-900 outline-none"></textarea>
         <p id="shadow-status" class="m-0 text-sm text-slate-600" role="status" aria-live="polite"></p>

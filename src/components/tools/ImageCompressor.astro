@@ -12,7 +12,7 @@ const { defaults, labels } = Astro.props;
 <section class="space-y-5 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-labelledby="image-compressor-heading">
   <h2 id="image-compressor-heading" class="text-xl font-extrabold text-slate-950">{labels.title}</h2>
   <p class="m-0 leading-7 text-slate-600">{labels.description}</p>
-  <label id="image-drop-zone" for="image-files" class="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-7 text-center transition hover:border-teal-600 focus-within:border-teal-600 focus-within:ring-4 focus-within:ring-teal-100">
+  <label id="image-drop-zone" for="image-files" class="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-7 text-center transition hover:border-indigo-600 focus-within:border-indigo-600 focus-within:ring-4 focus-within:ring-indigo-100">
     <span class="block text-lg font-extrabold text-slate-900">Drop images here or choose files</span>
     <span class="mt-1 block text-sm text-slate-600">{labels.fileHelp}</span>
     <input id="image-files" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple aria-describedby="image-input-help" />
@@ -21,33 +21,33 @@ const { defaults, labels } = Astro.props;
   <div class="grid gap-4 sm:grid-cols-2">
     <label for="image-quality" class="block text-sm font-bold text-slate-900">
       Output quality: <output id="image-quality-value" for="image-quality">{defaults.quality}%</output>
-      <input id="image-quality" type="range" min="10" max="100" value={defaults.quality} class="mt-3 block w-full accent-teal-700" />
+      <input id="image-quality" type="range" min="10" max="100" value={defaults.quality} class="mt-3 block w-full accent-indigo-700" />
     </label>
     <label for="image-target-kb" class="block text-sm font-bold text-slate-900">
       Target file size (KB, optional)
-      <input id="image-target-kb" type="number" min="1" max="51200" step="1" value={defaults.targetKB ?? ''} inputmode="numeric" placeholder="No target size" aria-describedby="image-target-help" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+      <input id="image-target-kb" type="number" min="1" max="51200" step="1" value={defaults.targetKB ?? ''} inputmode="numeric" placeholder="No target size" aria-describedby="image-target-help" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
       <span id="image-target-help" class="mt-1 block text-xs font-normal text-slate-500">{labels.targetHelp}</span>
     </label>
     <label for="image-format" class="block text-sm font-bold text-slate-900">
       Output format
-      <select id="image-format" disabled={defaults.lockFormat} class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-70">
+      <select id="image-format" disabled={defaults.lockFormat} class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-70">
         <option value="image/webp" selected={defaults.outputFormat === 'image/webp'}>WebP</option>
         <option value="image/jpeg" selected={defaults.outputFormat === 'image/jpeg'}>JPEG</option>
       </select>
     </label>
     <label for="image-max-width" class="block text-sm font-bold text-slate-900">
       Maximum width (optional)
-      <input id="image-max-width" type="number" min="1" max="12000" step="1" inputmode="numeric" value={defaults.maxWidth ?? ''} placeholder="Keep original width" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+      <input id="image-max-width" type="number" min="1" max="12000" step="1" inputmode="numeric" value={defaults.maxWidth ?? ''} placeholder="Keep original width" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
     </label>
     <label for="image-max-height" class="block text-sm font-bold text-slate-900">
       Maximum height (optional)
-      <input id="image-max-height" type="number" min="1" max="12000" step="1" inputmode="numeric" placeholder="Keep original height" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+      <input id="image-max-height" type="number" min="1" max="12000" step="1" inputmode="numeric" placeholder="Keep original height" class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
     </label>
   </div>
   <div class="flex flex-wrap gap-2">
-    <button id="compress-images" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Compress images</button>
-    <button id="clear-images" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800">Clear files</button>
-    <button id="download-all-images" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50">Download all</button>
+    <button id="compress-images" type="button" class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-800">Compress images</button>
+    <button id="clear-images" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800">Clear files</button>
+    <button id="download-all-images" type="button" disabled class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 disabled:cursor-not-allowed disabled:opacity-50">Download all</button>
   </div>
   <p id="image-status" class="m-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" role="status" aria-live="polite">Choose one or more images to get started.</p>
   <div id="image-results" class="space-y-5" aria-live="polite"></div>
@@ -87,7 +87,7 @@ const { defaults, labels } = Astro.props;
     imageStatus.textContent = message;
     imageStatus.className = isError
       ? 'm-0 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800'
-      : 'm-0 rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900';
+      : 'm-0 rounded-2xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-900';
   }
 
   function formatBytes(bytes: number): string {
@@ -296,7 +296,7 @@ const { defaults, labels } = Astro.props;
     const download = document.createElement('a');
     download.href = result.outputUrl;
     download.download = `${result.name.replace(/\.[^.]+$/, '')}-compressed.${result.outputType === 'image/webp' ? 'webp' : 'jpg'}`;
-    download.className = 'inline-flex min-h-11 items-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700';
+    download.className = 'inline-flex min-h-11 items-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700';
     download.textContent = 'Download compressed image';
     card.append(download);
     return card;
@@ -362,14 +362,14 @@ const { defaults, labels } = Astro.props;
   });
   imageDropZone?.addEventListener('dragover', (event) => {
     event.preventDefault();
-    imageDropZone.classList.add('border-teal-700', 'bg-teal-50');
+    imageDropZone.classList.add('border-indigo-700', 'bg-indigo-50');
   });
   imageDropZone?.addEventListener('dragleave', () => {
-    imageDropZone.classList.remove('border-teal-700', 'bg-teal-50');
+    imageDropZone.classList.remove('border-indigo-700', 'bg-indigo-50');
   });
   imageDropZone?.addEventListener('drop', (event) => {
     event.preventDefault();
-    imageDropZone.classList.remove('border-teal-700', 'bg-teal-50');
+    imageDropZone.classList.remove('border-indigo-700', 'bg-indigo-50');
     const files = (event as DragEvent).dataTransfer?.files;
     if (files) updateImageSelection(files);
   });

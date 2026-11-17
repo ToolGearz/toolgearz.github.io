@@ -49,8 +49,8 @@ const faqSchema = {
   <Navbar />
   <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools/image-compressor" class="text-sm font-bold text-teal-800 hover:text-teal-950">← Main Image Compressor</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Image tools · Runs in your browser</p>
+      <a href="/tools/image-compressor" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← Main Image Compressor</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Image tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">{variant.heading}</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">{variant.intro}</p>
       <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">{variant.description}</p>
@@ -65,7 +65,7 @@ const faqSchema = {
       </section>
       <section>
         <h2 class="text-xl font-extrabold text-slate-950">Steps for this use case</h2>
-        <ol class="mt-3 list-decimal space-y-2 pl-6 marker:font-bold marker:text-teal-800">
+        <ol class="mt-3 list-decimal space-y-2 pl-6 marker:font-bold marker:text-indigo-800">
           {variant.steps.map((step) => <li>{step}</li>)}
         </ol>
       </section>
@@ -84,13 +84,13 @@ const faqSchema = {
           ))}
         </div>
       </section>
-      <nav class="rounded-3xl border border-teal-200 bg-teal-50 p-5 sm:p-7" aria-label="Related image compression pages">
+      <nav class="rounded-3xl border border-indigo-200 bg-indigo-50 p-5 sm:p-7" aria-label="Related image compression pages">
         <h2 class="text-xl font-extrabold text-slate-950">Related image compression guides</h2>
         <p class="mt-2">Each guide shares the same private browser-based compressor but starts with different settings and addresses a separate upload or publishing task. Check the destination’s own file rules before applying a preset.</p>
         <ul class="mt-4 grid gap-3 sm:grid-cols-2">
-          <li><a class="block rounded-xl border border-teal-200 bg-white p-3 font-bold text-teal-900 hover:border-teal-500" href="/tools/image-compressor">Main Image Compressor and all settings</a></li>
+          <li><a class="block rounded-xl border border-indigo-200 bg-white p-3 font-bold text-indigo-900 hover:border-indigo-500" href="/tools/image-compressor">Main Image Compressor and all settings</a></li>
           {siblings.map((sibling) => (
-            <li><a class="block rounded-xl border border-teal-200 bg-white p-3 font-bold text-teal-900 hover:border-teal-500" href={`/tools/image-compressor/${sibling.slug}`}>{sibling.heading}</a></li>
+            <li><a class="block rounded-xl border border-indigo-200 bg-white p-3 font-bold text-indigo-900 hover:border-indigo-500" href={`/tools/image-compressor/${sibling.slug}`}>{sibling.heading}</a></li>
           ))}
         </ul>
       </nav>

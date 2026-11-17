@@ -17,8 +17,8 @@ import '../../styles/global.css';
   <Navbar />
   <main class="mx-auto w-[min(1100px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <a href="/tools" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Design &amp; developer tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Code &amp; Text Diff Checker</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">Compare text or code line by line. Changes stay on this device.</p>
     </header>
@@ -27,23 +27,23 @@ import '../../styles/global.css';
       <div class="grid gap-4 md:grid-cols-2">
         <label class="block text-sm font-bold text-slate-900">
           Original text / code
-          <textarea id="diff-original" rows="12" spellcheck="false" placeholder="Paste the original version..." class="mt-2 block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"></textarea>
+          <textarea id="diff-original" rows="12" spellcheck="false" placeholder="Paste the original version..." class="mt-2 block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100"></textarea>
         </label>
         <label class="block text-sm font-bold text-slate-900">
           Modified text / code
-          <textarea id="diff-modified" rows="12" spellcheck="false" placeholder="Paste the modified version..." class="mt-2 block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100"></textarea>
+          <textarea id="diff-modified" rows="12" spellcheck="false" placeholder="Paste the modified version..." class="mt-2 block w-full resize-y rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100"></textarea>
         </label>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <span class="mr-1 text-sm font-bold text-slate-700">View</span>
         <button id="diff-side-view" type="button" aria-pressed="true" class="diff-view-button rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white transition active:scale-[0.98]">Side-by-side</button>
-        <button id="diff-inline-view" type="button" aria-pressed="false" class="diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Inline</button>
+        <button id="diff-inline-view" type="button" aria-pressed="false" class="diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Inline</button>
         <span id="diff-count" class="ml-auto text-sm text-slate-500" aria-live="polite">Enter text to compare</span>
       </div>
       <div class="flex flex-wrap gap-2">
-        <button id="diff-clear" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Clear</button>
-        <button id="diff-swap" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Swap inputs</button>
-        <button id="diff-copy" type="button" class="rounded-full bg-teal-800 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-teal-950 active:scale-[0.98]">Copy diff summary</button>
+        <button id="diff-clear" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Clear</button>
+        <button id="diff-swap" type="button" class="rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Swap inputs</button>
+        <button id="diff-copy" type="button" class="rounded-full bg-indigo-800 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-950 active:scale-[0.98]">Copy diff summary</button>
       </div>
       <p id="diff-status" class="m-0 text-sm text-slate-600" role="status" aria-live="polite"></p>
       <div id="diff-output" class="hidden overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" aria-label="Diff results"></div>
@@ -184,7 +184,7 @@ import '../../styles/global.css';
     sideButton.setAttribute('aria-pressed', 'true');
     sideButton.className = 'diff-view-button rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white transition active:scale-[0.98]';
     inlineButton?.setAttribute('aria-pressed', 'false');
-    if (inlineButton) inlineButton.className = 'diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]';
+    if (inlineButton) inlineButton.className = 'diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]';
     renderDiff();
   });
   inlineButton?.addEventListener('click', () => {
@@ -192,7 +192,7 @@ import '../../styles/global.css';
     inlineButton.setAttribute('aria-pressed', 'true');
     inlineButton.className = 'diff-view-button rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white transition active:scale-[0.98]';
     sideButton?.setAttribute('aria-pressed', 'false');
-    if (sideButton) sideButton.className = 'diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]';
+    if (sideButton) sideButton.className = 'diff-view-button rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]';
     renderDiff();
   });
   document.querySelector<HTMLButtonElement>('#diff-clear')?.addEventListener('click', () => {
@@ -219,7 +219,7 @@ import '../../styles/global.css';
     try {
       await navigator.clipboard.writeText(summary);
       diffStatus.textContent = 'Diff summary copied to the clipboard.';
-      diffStatus.className = 'm-0 text-sm text-teal-800';
+      diffStatus.className = 'm-0 text-sm text-indigo-800';
     } catch {
       diffStatus.textContent = 'Clipboard access failed. Select and copy the highlighted lines manually.';
       diffStatus.className = 'm-0 text-sm text-rose-700';

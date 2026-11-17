@@ -18,14 +18,17 @@ const categories = [...new Set(tools.map(({ category }) => category))];
   <Navbar />
   <main class="mx-auto w-[min(1180px,calc(100%-2rem))] pb-16">
     <header class="py-12 sm:py-16">
-      <a href="/" class="text-sm font-bold text-teal-800 hover:text-teal-950">← Home</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">ToolGearz · Free online utilities</p>
+      <a href="/" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← Home</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">ToolGearz · Free online utilities</p>
       <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">All tools, one place</h1>
           <p class="mb-0 mt-3 max-w-2xl leading-7 text-slate-600">Explore every utility and generator. New tools appear first, and browser tools run on your device.</p>
         </div>
-        <span class="w-fit rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-sm font-bold text-teal-900">{tools.length} tools</span>
+        <a
+          href="#all-tools"
+          class="tools-primary-action inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 active:scale-95"
+        >Browse all {tools.length} tools <span aria-hidden="true">↓</span></a>
       </div>
     </header>
 
@@ -41,7 +44,7 @@ const categories = [...new Set(tools.map(({ category }) => category))];
             id="all-tools-search"
             type="search"
             placeholder="Search all tools..."
-            class="w-full rounded-2xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-teal-700 focus:ring-4 focus:ring-teal-100"
+            class="w-full rounded-2xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-indigo-700 focus:ring-4 focus:ring-indigo-100"
           />
         </label>
         <nav id="all-tools-filters" class="flex flex-wrap gap-2" aria-label="Filter tools by category">
@@ -56,7 +59,7 @@ const categories = [...new Set(tools.map(({ category }) => category))];
               type="button"
               data-category={category}
               aria-pressed="false"
-              class="all-tools-filter rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800"
+              class="all-tools-filter rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800"
             >{category}</button>
           ))}
         </nav>
@@ -72,15 +75,15 @@ const categories = [...new Set(tools.map(({ category }) => category))];
             data-category={tool.category}
             data-search={`${tool.title} ${tool.description} ${tool.category} ${tool.type}`}
             style={`--card-index: ${index}`}
-            class="all-tool-card group grid min-h-[112px] grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:min-h-[158px] sm:grid-cols-1 sm:items-stretch sm:rounded-3xl sm:p-4"
+            class="all-tool-card group grid min-h-[112px] grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:min-h-[158px] sm:grid-cols-1 sm:items-stretch sm:rounded-3xl sm:p-4"
           >
-            <span class="row-span-3 grid h-10 w-10 place-items-center rounded-xl bg-teal-50 px-1 text-lg font-bold text-teal-800 transition-transform duration-200 group-hover:scale-105 sm:row-span-1 sm:mb-3">
+            <span class="row-span-3 grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 px-1 text-lg font-bold text-indigo-800 transition-transform duration-200 group-hover:scale-105 sm:row-span-1 sm:mb-3">
               {tool.icon ?? (tool.type === 'ai' ? '✦' : '↔')}
             </span>
             <div class="flex min-w-0 items-start justify-between gap-2">
-              <h3 class="m-0 line-clamp-2 text-sm font-extrabold leading-5 text-slate-950 group-hover:text-teal-800">{tool.title}</h3>
+              <h3 class="m-0 line-clamp-2 text-sm font-extrabold leading-5 text-slate-950 group-hover:text-indigo-800">{tool.title}</h3>
               <span class="flex shrink-0 flex-wrap justify-end gap-1">
-                {index < 3 && <span class="rounded-full bg-teal-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-teal-800">New</span>}
+                {index < 3 && <span class="rounded-full bg-indigo-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-indigo-800">New</span>}
                 <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-600">
                   {tool.type === 'ai' ? 'AI' : 'Browser'}
                 </span>
@@ -89,7 +92,7 @@ const categories = [...new Set(tools.map(({ category }) => category))];
             <p class="m-0 line-clamp-2 text-xs leading-4 text-slate-600 sm:mt-1">{tool.description}</p>
             <div class="col-start-2 flex min-w-0 items-center justify-between gap-2 pt-1 sm:col-start-auto sm:mt-auto sm:pt-3">
               <span class="truncate text-[10px] font-semibold text-slate-500">{tool.category}</span>
-              <span class="shrink-0 text-xs font-bold text-teal-800">Open <span aria-hidden="true">→</span></span>
+              <span class="shrink-0 text-xs font-bold text-indigo-800">Open <span aria-hidden="true">→</span></span>
             </div>
           </a>
         ))}
@@ -98,9 +101,28 @@ const categories = [...new Set(tools.map(({ category }) => category))];
         No tools match your search. Try another term or category.
       </p>
     </section>
+
+    <section class="mt-12 flex flex-col gap-5 rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8" aria-label="All tools navigation">
+      <div>
+        <h2 class="m-0 text-xl font-extrabold text-slate-950">That’s the complete tool library.</h2>
+        <p class="mb-0 mt-2 text-sm leading-6 text-slate-600">Search or filter above to find the utility you need, or return to the homepage.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="#all-tools" class="tools-primary-action inline-flex min-h-11 items-center justify-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-indigo-700 active:scale-95">Browse all tools ↑</a>
+        <a href="/" class="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700">Home</a>
+      </div>
+    </section>
   </main>
   <Footer />
 </Layout>
+
+<style>
+  a.tools-primary-action,
+  a.tools-primary-action:hover,
+  a.tools-primary-action:focus-visible {
+    color: #ffffff;
+  }
+</style>
 
 <style>
   .all-tool-card {

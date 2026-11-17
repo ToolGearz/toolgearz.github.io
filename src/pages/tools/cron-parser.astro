@@ -17,8 +17,8 @@ import '../../styles/global.css';
   <Navbar />
   <main class="mx-auto w-[min(900px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
-      <a href="/tools" class="text-sm font-bold text-teal-800 hover:text-teal-950">← All tools</a>
-      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-teal-800">Design &amp; developer tools · Runs in your browser</p>
+      <a href="/tools" class="text-sm font-bold text-indigo-800 hover:text-indigo-950">← All tools</a>
+      <p class="mb-2 mt-7 text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-800">Design &amp; developer tools · Runs in your browser</p>
       <h1 class="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Cron Expression Reader</h1>
       <p class="mt-3 max-w-2xl leading-7 text-slate-600">Read standard five-field cron syntax in plain English and see upcoming runs in your local time.</p>
     </header>
@@ -26,21 +26,21 @@ import '../../styles/global.css';
     <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur-md sm:p-8" aria-label="Cron expression parser">
       <div>
         <label for="cron-input" class="mb-2 block text-sm font-bold text-slate-900">Cron expression</label>
-        <input id="cron-input" type="text" spellcheck="false" value="*/15 * * * *" placeholder="*/15 * * * *" class="block w-full rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-lg text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-100" />
+        <input id="cron-input" type="text" spellcheck="false" value="*/15 * * * *" placeholder="*/15 * * * *" class="block w-full rounded-2xl border border-slate-300 bg-white px-4 py-4 font-mono text-lg text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100" />
         <p class="mt-2 text-xs text-slate-500">Format: minute · hour · day of month · month · day of week</p>
       </div>
       <div>
         <p class="mb-2 text-sm font-bold text-slate-900">Common schedules</p>
         <div class="flex flex-wrap gap-2">
-          <button type="button" data-cron="* * * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Every minute</button>
-          <button type="button" data-cron="0 * * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Every hour at :00</button>
-          <button type="button" data-cron="0 0 * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Daily at midnight</button>
-          <button type="button" data-cron="0 0 * * 1" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800 active:scale-[0.98]">Weekly (Monday)</button>
+          <button type="button" data-cron="* * * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Every minute</button>
+          <button type="button" data-cron="0 * * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Every hour at :00</button>
+          <button type="button" data-cron="0 0 * * *" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Daily at midnight</button>
+          <button type="button" data-cron="0 0 * * 1" class="cron-preset rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-indigo-700 hover:text-indigo-800 active:scale-[0.98]">Weekly (Monday)</button>
         </div>
       </div>
       <div id="cron-error" class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert"></div>
-      <div class="rounded-2xl border border-teal-200 bg-teal-50/80 p-5">
-        <p class="mb-1 text-xs font-extrabold uppercase tracking-[0.14em] text-teal-800">In plain English</p>
+      <div class="rounded-2xl border border-indigo-200 bg-indigo-50/80 p-5">
+        <p class="mb-1 text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-800">In plain English</p>
         <p id="cron-description" class="m-0 text-lg font-bold leading-7 text-slate-950" aria-live="polite"></p>
       </div>
       <div>
