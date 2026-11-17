@@ -12,8 +12,7 @@ const {
 
 const siteUrl = Astro.site?.origin ?? new URL(siteConfig.domain).origin;
 const socialImage = new URL(image, siteUrl).href;
-const canonicalPath = url === '/' ? '' : `/${url.replace(/^\/+|\/+$/g, '')}`;
-const canonical = `${siteUrl}${canonicalPath}`;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
