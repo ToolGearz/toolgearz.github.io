@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../data/site';
 import { newestTools } from '../data/tools';
+import SocialLinks from './SocialLinks.astro';
 
 const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0, 10);
 ---
@@ -20,6 +21,7 @@ const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0
         <a href="/tools">Explore all tools <span aria-hidden="true">→</span></a>
         <a href={`mailto:${siteConfig.email}`}>Email us</a>
       </div>
+      <SocialLinks />
     </div>
 
     <div class="footer-column">
@@ -251,6 +253,7 @@ const footerTools = newestTools.filter((tool) => tool.type === 'client').slice(0
 
   @media (prefers-reduced-motion: reduce) {
     .footer-column a,
+    .social-links a,
     .brand-actions a,
     .footer-bottom a {
       transition: none;

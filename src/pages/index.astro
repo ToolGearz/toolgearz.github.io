@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import SocialLinks from '../components/SocialLinks.astro';
 import { newestTools, tools } from '../data/tools';
 import '../styles/global.css';
 
@@ -31,20 +32,40 @@ const homeTools = newestTools;
               <p class="mt-4 max-w-2xl text-[0.95rem] leading-6 text-slate-600 sm:mt-5 sm:text-lg sm:leading-7">
                 Format code, transform text, create assets, and get everyday work done with simple tools that run right in your browser.
               </p>
-              <label class="hero-search mt-6 flex max-w-2xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 pl-3 shadow-lg shadow-slate-900/[0.06] transition focus-within:border-indigo-300 focus-within:ring-4 focus-within:ring-indigo-100/70 sm:mt-8 sm:gap-3 sm:p-2 sm:pl-4">
-                <span aria-hidden="true" class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-indigo-50 text-indigo-600 sm:h-10 sm:w-10">
-                  <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"></circle><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                </span>
-                <span class="sr-only">Search tools</span>
-                <input
-                  id="tool-search"
-                  type="search"
-                  placeholder="What do you need to do?"
-                  aria-label="Search tools"
-                  class="min-w-0 flex-1 border-0 bg-transparent py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-0 focus:ring-0 sm:py-3 sm:text-base"
-                />
-                <kbd class="hidden rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-400 sm:inline">Search</kbd>
-              </label>
+              <div class="hero-search-wrap relative mt-6 max-w-2xl sm:mt-8">
+                <label class="hero-search flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 pl-3 shadow-lg shadow-slate-900/[0.06] transition focus-within:border-indigo-300 focus-within:ring-4 focus-within:ring-indigo-100/70 sm:gap-3 sm:p-2 sm:pl-4">
+                  <span aria-hidden="true" class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-indigo-50 text-indigo-600 sm:h-10 sm:w-10">
+                    <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"></circle><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                  </span>
+                  <span class="sr-only">Search tools</span>
+                  <input
+                    id="tool-search"
+                    type="search"
+                    placeholder="What do you need to do?"
+                    aria-label="Search tools"
+                    aria-controls="tool-search-results"
+                    aria-expanded="false"
+                    class="min-w-0 flex-1 border-0 bg-transparent py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-0 focus:ring-0 sm:py-3 sm:text-base"
+                  />
+                  <kbd class="hidden rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-400 sm:inline">Search</kbd>
+                </label>
+                <div id="tool-search-results" class="mt-2 hidden max-h-80 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10" aria-label="Matching tools">
+                  <p id="tool-search-status" class="px-3 py-2 text-xs font-semibold text-slate-500" aria-live="polite"></p>
+                  <ul class="grid gap-1">
+                    {tools.map((tool) => (
+                      <li data-search-option data-category={tool.category} data-search={`${tool.id} ${tool.title} ${tool.description} ${tool.category} ${tool.type}`} class="hidden">
+                        <a href={`/tools/${tool.id}`} class="block rounded-xl px-3 py-2.5 transition hover:bg-indigo-50 focus-visible:bg-indigo-50 focus-visible:outline-none">
+                          <span class="block text-sm font-bold text-slate-900">{tool.title}</span>
+                          <span class="mt-0.5 block line-clamp-1 text-xs leading-5 text-slate-500">{tool.description}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <p id="tool-search-empty" class="hidden px-3 py-2 text-sm text-slate-600">
+                    No matching tools. <a class="font-bold text-indigo-700 underline underline-offset-2" href="/tools">Browse all tools</a>
+                  </p>
+                </div>
+              </div>
               <div class="hero-actions mt-5 flex flex-col gap-2.5 sm:mt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
                 <a
                   href="/tools"
@@ -54,6 +75,10 @@ const homeTools = newestTools;
                   href="/tools/json-to-ts"
                   class="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 active:scale-95 sm:min-h-12 sm:px-6 sm:py-3 sm:text-base"
                 >Explore JSON to TypeScript</a>
+              </div>
+              <div class="hero-social mt-5 flex items-center gap-3 sm:mt-6">
+                <span class="text-xs font-semibold text-slate-500">Follow ToolGearz</span>
+                <SocialLinks variant="hero" />
               </div>
             </div>
 
@@ -116,7 +141,7 @@ const homeTools = newestTools;
             aria-label={`Open ${tool.title}: ${tool.description}`}
             data-tool-card
             data-category={tool.category}
-            data-search={`${tool.title} ${tool.description} ${tool.category} ${tool.type}`}
+            data-search={`${tool.id} ${tool.title} ${tool.description} ${tool.category} ${tool.type}`}
             class="tool-card group grid min-h-[126px] grid-cols-[2.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-1 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:min-h-[210px] sm:grid-cols-1 sm:items-stretch sm:rounded-3xl sm:p-5"
           >
             <span class="tool-card-icon row-span-3 grid h-10 w-10 place-items-center rounded-xl border border-indigo-100 bg-indigo-50 px-1 text-base font-bold text-indigo-700 transition-transform duration-300 group-hover:scale-105 sm:row-span-1 sm:mb-4 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-lg">
@@ -250,6 +275,16 @@ const homeTools = newestTools;
     box-shadow: 0 12px 32px rgba(79, 70, 229, 0.12);
   }
 
+  .hero-social :global(.social-links a) {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .hero-social :global(.social-links svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+
   a.home-primary-action,
   a.home-primary-action:hover,
   a.home-primary-action:focus-visible {
@@ -326,16 +361,28 @@ const homeTools = newestTools;
   const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('.category-filter'));
   const count = document.querySelector<HTMLElement>('#tool-result-count');
   const empty = document.querySelector<HTMLElement>('#no-tools-found');
+  const searchResults = document.querySelector<HTMLElement>('#tool-search-results');
+  const searchStatus = document.querySelector<HTMLElement>('#tool-search-status');
+  const searchEmpty = document.querySelector<HTMLElement>('#tool-search-empty');
+  const searchOptions = Array.from(document.querySelectorAll<HTMLLIElement>('[data-search-option]'));
   let selectedCategory = 'all';
+
+  const normalize = (value: string) =>
+    value.toLocaleLowerCase().replace(/[-_/]+/g, ' ').replace(/\s+/g, ' ').trim();
 
   const updateTools = () => {
     const query = search?.value.trim().toLocaleLowerCase() ?? '';
+    const normalizedQuery = normalize(query);
     let visibleCount = 0;
+    const matchingOptions = searchOptions.filter((option) => {
+      const matchesCategory = selectedCategory === 'all' || option.dataset.category === selectedCategory;
+      return matchesCategory && (option.dataset.search ? normalize(option.dataset.search).includes(normalizedQuery) : false);
+    });
 
     for (const card of cards) {
       const matchesCategory =
         selectedCategory === 'all' || card.dataset.category === selectedCategory;
-      const matchesSearch = card.dataset.search?.toLocaleLowerCase().includes(query) ?? false;
+      const matchesSearch = card.dataset.search ? normalize(card.dataset.search).includes(normalizedQuery) : false;
       const visible = matchesCategory && matchesSearch;
       card.classList.toggle('hidden', !visible);
       if (visible) visibleCount += 1;
@@ -343,6 +390,20 @@ const homeTools = newestTools;
 
     if (count) count.textContent = `Showing ${visibleCount} ${visibleCount === 1 ? 'tool' : 'tools'}`;
     empty?.classList.toggle('hidden', visibleCount > 0);
+
+    const showResults = normalizedQuery.length > 0;
+    searchResults?.classList.toggle('hidden', !showResults);
+    search?.setAttribute('aria-expanded', String(showResults));
+    searchOptions.forEach((option) => {
+      const isMatch = matchingOptions.includes(option);
+      option.classList.toggle('hidden', !showResults || !isMatch);
+    });
+    searchEmpty?.classList.toggle('hidden', !showResults || matchingOptions.length > 0);
+    if (searchStatus) {
+      searchStatus.textContent = matchingOptions.length
+        ? `${matchingOptions.length} matching ${matchingOptions.length === 1 ? 'tool' : 'tools'}`
+        : '';
+    }
   };
 
   search?.addEventListener('input', updateTools);

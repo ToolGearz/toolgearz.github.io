@@ -1,0 +1,87 @@
+---
+interface Props {
+  variant?: 'footer' | 'hero';
+}
+
+const { variant = 'footer' } = Astro.props;
+---
+
+<nav class:list={['social-links', `social-links--${variant}`]} aria-label="ToolGearz social media">
+  <a href="https://www.pinterest.com/toolgearz/" target="_blank" rel="noopener noreferrer" aria-label="ToolGearz on Pinterest">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.64 19.31c-.04-.78-.01-1.72.19-2.57l1.29-5.47s-.32-.65-.32-1.61c0-1.51.88-2.64 1.97-2.64.93 0 1.38.7 1.38 1.53 0 .93-.59 2.33-.89 3.63-.25 1.08.54 1.96 1.6 1.96 1.92 0 3.4-2.03 3.4-4.96 0-2.59-1.86-4.42-4.54-4.42-3.09 0-4.91 2.32-4.91 4.71 0 .93.36 1.93.81 2.47.09.11.1.2.07.31l-.3 1.19c-.05.19-.15.23-.35.14-1.3-.61-2.12-2.51-2.12-4.04 0-3.29 2.39-6.31 6.89-6.31 3.62 0 6.43 2.58 6.43 6.03 0 3.6-2.27 6.5-5.43 6.5-1.06 0-2.06-.55-2.4-1.2l-.65 2.49c-.23.87-.86 1.95-1.29 2.61A10 10 0 1 0 12 2Z"/></svg>
+  </a>
+  <a href="https://www.youtube.com/channel/UCOTxeq12q7XD8XaLkxIH8xg" target="_blank" rel="noopener noreferrer" aria-label="ToolGearz on YouTube">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.56 12 3.56 12 3.56s-7.55 0-9.4.52A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12c1.85.52 9.4.52 9.4.52s7.55 0 9.4-.52a3 3 0 0 0 2.1-2.12A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.55 15.6V8.4L15.82 12l-6.27 3.6Z"/></svg>
+  </a>
+  <a href="https://www.tiktok.com/@toolgearz" target="_blank" rel="noopener noreferrer" aria-label="ToolGearz on TikTok">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.9 2.9 0 0 1-2.9 2.9 2.9 2.9 0 1 1 2.9-2.9c0-.25-.03-.5-.1-.74V11.4a6.37 6.37 0 1 0 3.55 5.72V9.9a8.22 8.22 0 0 0 4.8 1.54V8a4.85 4.85 0 0 1-1.03-.11Z"/></svg>
+  </a>
+  <a href="https://www.reddit.com/user/toolgearz/" target="_blank" rel="noopener noreferrer" aria-label="ToolGearz on Reddit">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a1 1 0 0 1 .98.8l.7 3.37a10.3 10.3 0 0 1 5.43 1.68 1.75 1.75 0 1 1 1.25 3.19c.12.46.18.95.18 1.46 0 3.6-3.82 6.5-8.54 6.5s-8.54-2.9-8.54-6.5c0-.51.06-1 .18-1.46a1.75 1.75 0 1 1 1.25-3.2 10.3 10.3 0 0 1 5.43-1.67l.88-4.22A1 1 0 0 1 12 3.5Zm-3.1 9.25a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Zm6.2 0a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Zm-7.3 3.58a.65.65 0 0 0-.92.92 7.4 7.4 0 0 0 10.24 0 .65.65 0 1 0-.92-.92 6.1 6.1 0 0 1-8.4 0ZM16.7 9.7a.85.85 0 1 0 0 1.7.85.85 0 0 0 0-1.7ZM7.3 9.7a.85.85 0 1 0 0 1.7.85.85 0 0 0 0-1.7Z"/></svg>
+  </a>
+</nav>
+
+<style>
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .social-links a {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 0.8rem;
+    background: rgba(255, 255, 255, 0.045);
+    color: #cbd5e1;
+    transition: color 160ms ease, transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .social-links a:hover,
+  .social-links a:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(165, 180, 252, 0.45);
+    background: rgba(129, 140, 248, 0.14);
+    color: #e0e7ff;
+  }
+
+  .social-links svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: currentColor;
+  }
+
+  .social-links--hero {
+    gap: 0.45rem;
+  }
+
+  .social-links--footer {
+    margin-top: 1.1rem;
+  }
+
+  .social-links--hero a {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-color: #e2e8f0;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.82);
+    color: #475569;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+
+  .social-links--hero a:hover,
+  .social-links--hero a:focus-visible {
+    border-color: #c7d2fe;
+    background: #eef2ff;
+    color: #4338ca;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .social-links a {
+      transition: none;
+    }
+  }
+</style>
