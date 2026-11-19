@@ -6,7 +6,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/text-to-speech';
 const faqs = [
   {
     question: 'Does this reader send my text to an online service?',
@@ -25,16 +24,6 @@ const faqs = [
     answer: 'Use Pause to pause current playback, Resume to continue it, and Stop to cancel the current reading queue. You can also change the voice and speaking controls before starting again.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'Text to Speech Reader',
-  url: pageUrl,
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript and browser speech synthesis support',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -134,7 +123,6 @@ const faqSchema = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/html-encoder-decoder">HTML Entity Encoder &amp; Decoder</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

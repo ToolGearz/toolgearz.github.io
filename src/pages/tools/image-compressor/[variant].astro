@@ -16,24 +16,12 @@ export function getStaticPaths() {
 }
 
 const { variant } = Astro.props;
-const pageUrl = `https://toolgearz.github.io/tools/image-compressor/${variant.slug}`;
 const faqs = variant.faqs;
 const siblings = variant.siblings.map((slug) => {
   const sibling = imageCompressorVariants.find((entry) => entry.slug === slug);
   if (!sibling) throw new Error(`Unknown image compressor variant: ${slug}`);
   return sibling;
 });
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: variant.heading,
-  description: variant.description,
-  url: pageUrl,
-  applicationCategory: 'MultimediaApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript and Canvas support',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -45,7 +33,7 @@ const faqSchema = {
 };
 ---
 
-<Layout title={`${variant.title} | ToolGearz`} description={variant.description} url={`/tools/image-compressor/${variant.slug}`} analytics={false}>
+<Layout title={variant.title} description={variant.description} url={`/tools/image-compressor/${variant.slug}`} analytics={false}>
   <Navbar />
   <main class="mx-auto w-[min(1000px,calc(100%-2rem))] pb-12">
     <header class="py-12 sm:py-16">
@@ -95,7 +83,6 @@ const faqSchema = {
         </ul>
       </nav>
     </article>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

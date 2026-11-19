@@ -6,7 +6,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/html-minifier';
 const faqs = [
   {
     question: 'Does minification change code inside script, style, pre, or textarea?',
@@ -25,16 +24,6 @@ const faqs = [
     answer: 'No. Formatting and minification run entirely in your browser. The page makes no API calls and does not save the input.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'HTML Minifier & Beautifier',
-  url: pageUrl,
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -149,7 +138,6 @@ const faqSchema = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/json-formatter">JSON Formatter</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

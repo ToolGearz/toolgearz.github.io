@@ -6,7 +6,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/html-encoder-decoder';
 const faqs = [
   {
     question: 'What does an HTML entity encoder do?',
@@ -25,16 +24,6 @@ const faqs = [
     answer: 'No. Character encoding is not a complete security sanitizer. Use a context-aware escaping library and a reviewed sanitization policy when handling untrusted content in an application.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'HTML Entity Encoder & Decoder',
-  url: pageUrl,
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -118,7 +107,6 @@ const faqSchema = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/css-box-shadow-generator">CSS Box Shadow Generator</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

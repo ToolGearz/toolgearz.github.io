@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../data/site';
 import Analytics from '../components/Analytics.astro';
+import { getToolSeo } from '../data/tool-seo';
 
 const {
   title = 'ToolGearz | Free Online Tools & Utilities',
@@ -13,6 +14,15 @@ const {
 const siteUrl = Astro.site?.origin ?? new URL(siteConfig.domain).origin;
 const socialImage = new URL(image, siteUrl).href;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const toolPath = Astro.url.pathname.match(/^\/tools\/([^/]+)\/?$/);
+const toolMetadata = toolPath ? getToolSeo(toolPath[1]) : null;
+const brandSuffix = `| ${siteConfig.siteName}`;
+const requestedTitle = String(toolMetadata?.title ?? title).trim();
+const pageTitle = requestedTitle.toLowerCase().endsWith(brandSuffix.toLowerCase())
+  ? requestedTitle
+  : `${requestedTitle} ${brandSuffix}`;
+const pageDescription = String(toolMetadata?.description ?? description).trim();
+const isToolPage = /^\/tools\/[^/]+(?:\/[^/]+)?\/?$/.test(Astro.url.pathname);
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -20,6 +30,18 @@ const websiteSchema = {
   url: siteUrl,
   description: siteConfig.baseDescription,
 };
+const webApplicationSchema = isToolPage
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: pageTitle,
+      description: pageDescription,
+      url: canonical,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    }
+  : null;
 ---
 <!doctype html>
 <html lang="en">
@@ -28,21 +50,21 @@ const websiteSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="yandex-verification" content="8afba3b3b3fc73a0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#0f172a" />
     <link rel="canonical" href={canonical} />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta property="og:site_name" content={siteConfig.siteName} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={socialImage} />
     {analytics && <Analytics />}
   </head>
@@ -71,6 +93,7 @@ const websiteSchema = {
     </script>
 
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    {webApplicationSchema && <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />}
   </body>
 </html>
 

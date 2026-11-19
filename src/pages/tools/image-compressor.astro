@@ -8,7 +8,6 @@ import ImageCompressor from '../../components/tools/ImageCompressor.astro';
 import { imageCompressorVariants } from '../../data/variants/image-compressor';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/image-compressor';
 const faqs = [
   {
     question: 'Are my images uploaded while compressing them?',
@@ -27,16 +26,6 @@ const faqs = [
     answer: 'Up to 20 files can be processed per selection. Each file must be 40 MB or smaller, and decoded images are limited to 40 megapixels for browser memory safety.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'Image Compressor',
-  url: pageUrl,
-  applicationCategory: 'MultimediaApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript and Canvas support',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -126,7 +115,6 @@ const toolLabels = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/css-minifier">CSS Minifier</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

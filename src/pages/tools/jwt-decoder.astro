@@ -6,7 +6,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/jwt-decoder';
 const faqs = [
   {
     question: 'Does decoding a JWT verify that it is authentic?',
@@ -25,16 +24,6 @@ const faqs = [
     answer: 'The inspector recognizes exp (expiration), iat (issued at), and nbf (not before) when they contain numeric Unix timestamps in seconds.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'JWT Decoder & Inspector',
-  url: pageUrl,
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -139,7 +128,6 @@ const faqSchema = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/json-formatter">JSON Formatter</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />

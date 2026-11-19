@@ -21,19 +21,7 @@ const relatedTools = guide.relatedToolIds.map((id) => {
   }
   return relatedTool;
 });
-const pageUrl = `https://toolgearz.github.io/tools/${tool.id}`;
 const faqs = guide.faqs;
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: tool.title,
-  description: tool.description,
-  url: pageUrl,
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -108,5 +96,4 @@ const faqSchema = {
   </nav>
 </article>
 
-<script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
 <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />

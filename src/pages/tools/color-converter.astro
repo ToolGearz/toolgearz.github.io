@@ -6,7 +6,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import '../../styles/global.css';
 
-const pageUrl = 'https://toolgearz.github.io/tools/color-converter';
 const faqs = [
   {
     question: 'Which color formats does this converter support?',
@@ -25,16 +24,6 @@ const faqs = [
     answer: 'No. Parsing and conversion happen in your browser. The tool makes no external API calls and does not save your input.',
   },
 ];
-const webApplicationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: 'HEX, RGB & HSL Color Converter',
-  url: pageUrl,
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -132,7 +121,6 @@ const faqSchema = {
         <a class="rounded-2xl border border-slate-200 p-4 font-bold text-indigo-800 hover:border-indigo-400" href="/tools/svg-formatter">SVG Formatter</a>
       </div>
     </section>
-    <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </main>
   <Footer />
